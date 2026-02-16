@@ -518,14 +518,15 @@ img {
 
 .moto-card {
   position: relative;
-  background: var(--bg-card);
-  overflow: hidden;
+  background: transparent;
+  overflow: visible;
   cursor: pointer;
-  transition: background var(--transition-fast);
+  display: flex;
+  flex-direction: column;
 }
 
 .moto-card:hover {
-  background: var(--bg-hover);
+  background: transparent;
 }
 
 .moto-card-image {
@@ -545,64 +546,84 @@ img {
 
 .moto-card:hover .moto-card-image img {
   transform: scale(1.05);
+  opacity: 0.8;
 }
 
 .moto-card-badge {
   position: absolute;
-  top: 16px;
-  left: 0;
+  top: 12px;
+  left: 12px;
   background: var(--orange);
   color: var(--bg);
   font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 0.7rem;
+  font-weight: 800;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  padding: 4px 16px;
+  padding: 6px 12px;
   z-index: 2;
 }
 
 .moto-card-info {
-  padding: 20px 24px;
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .moto-card-brand {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.2em;
   color: var(--orange);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .moto-card-model {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.4rem;
-  font-weight: 700;
+  font-size: 1.6rem;
+  font-weight: 800;
   text-transform: uppercase;
-  color: var(--text);
-  margin-bottom: 8px;
+  color: var(--white);
+  line-height: 0.95;
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
 }
 
 .moto-card-meta {
   display: flex;
   align-items: center;
-  gap: 16px;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-bottom: 12px;
+  gap: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  margin-bottom: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.moto-card-meta span:not(:last-child)::after {
+  content: '/';
+  margin-left: 12px;
+  color: var(--text-dim);
+  opacity: 0.5;
 }
 
 .moto-card-price {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--text);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1;
+  letter-spacing: 0.05em;
 }
 
 .moto-card-price .currency {
+  font-size: 0.8em;
   color: var(--orange);
+  margin-right: 2px;
 }
 
 /* ── CATALOG LAYOUT ──────────────────────────────────── */
@@ -613,7 +634,8 @@ img {
 
 .catalog-main {
   display: grid;
-  grid-template-columns: 1fr 280px;
+  grid-template-columns: 280px 1fr;
+  /* Swapped: Sidebar (fixed) | Catalog (rest) */
   gap: 40px;
   align-items: start;
 }
@@ -621,8 +643,8 @@ img {
 .catalog-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-  order: 1;
+  gap: 40px;
+  /* order: 1; - REMOVED */
 }
 
 .empty-state {
@@ -635,10 +657,10 @@ img {
   position: sticky;
   top: 100px;
   background: var(--bg-card);
-  border-radius: 8px;
+  border-radius: 0;
   padding: 0;
   overflow: hidden;
-  order: 2;
+  /* order: 2; - REMOVED to let natural DOM order take over (Sidebar first) */
 }
 
 .filter-sidebar-header {
@@ -675,6 +697,7 @@ img {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 14px;
+  min-height: 24px;
 }
 
 .filter-group-title {
@@ -687,21 +710,21 @@ img {
 }
 
 .filter-reset {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.65rem;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
   color: var(--text-dim);
   background: none;
   border: none;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   cursor: pointer;
-  opacity: 0.6;
-  transition: opacity var(--transition-fast), color var(--transition-fast);
+  transition: color var(--transition-fast);
+  padding: 4px 0;
 }
 
 .filter-reset:hover {
-  opacity: 1;
-  color: var(--text);
+  color: var(--orange);
 }
 
 /* ── Filter chips ── */
@@ -709,7 +732,7 @@ img {
 .filter-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
 }
 
 .filter-chip {
@@ -759,7 +782,7 @@ img {
 /* ── Custom Range Slider ── */
 
 .range-slider-container {
-  padding: 8px 0 4px;
+  padding: 8px 12px 4px;
 }
 
 .range-slider-track {

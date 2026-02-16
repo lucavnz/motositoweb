@@ -12,7 +12,8 @@ interface FilterSidebarProps {
     onYearRangeChange?: (min: number, max: number) => void
     priceMax?: number
     activePriceMax?: number
-    onPriceMaxChange?: (price: number) => void
+    activePriceMin?: number
+    onPriceRangeChange?: (min: number, max: number) => void
     brands?: Array<{ _id: string; name: string; slug: { current: string } }>
     activeBrand?: string
     onBrandChange?: (brand: string) => void
@@ -231,7 +232,8 @@ export function FilterSidebar({
     onYearRangeChange,
     priceMax,
     activePriceMax,
-    onPriceMaxChange,
+    activePriceMin,
+    onPriceRangeChange,
     brands,
     activeBrand,
     onBrandChange,
@@ -247,33 +249,65 @@ export function FilterSidebar({
 
     const filterContent = (
         <div className="filter-sidebar-content">
-            {/* Type filter */}
-            <div className="filter-group">
-                <div className="filter-group-header">
-                    <h4 className="filter-group-title">Tipo</h4>
-                    {activeType !== 'all' && (
-                        <button className="filter-reset" onClick={() => onTypeChange('all')}>
-                            Reset
-                        </button>
-                    )}
+            {/* Type filter - Vertical List Style */}
+            <div className="filter-group" style={{ padding: '18px 24px 24px' }}>
+                <div className="filter-group-header" style={{ display: 'none' }}>
+                    {/* Hidden header since user asked to remove title */}
                 </div>
-                <div className="filter-chips">
-                    {types.map((type) => (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+                    <button
+                        className="type-filter-item"
+                        onClick={() => onTypeChange('all')}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            textAlign: 'left',
+                            background: 'transparent',
+                            border: 'none',
+                            borderLeft: activeType === 'all'
+                                ? '4px solid var(--orange)'
+                                : '2px solid rgba(255, 255, 255, 0.1)',
+                            padding: '12px 0 12px 20px',
+                            color: activeType === 'all' ? 'var(--white)' : 'var(--text-dim)',
+                            fontFamily: 'Barlow Condensed, sans-serif',
+                            fontWeight: activeType === 'all' ? 800 : 700,
+                            fontSize: '1.4rem',
+                            textTransform: 'uppercase',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            width: '100%',
+                            position: 'relative'
+                        }}
+                    >
+                        TUTTI
+                    </button>
+                    {types.filter(t => t !== 'all').map((type) => (
                         <button
                             key={type}
-                            className={`filter-chip ${activeType === type ? 'filter-chip--active' : ''}`}
-                            onClick={() => {
-                                onTypeChange(type)
+                            className="type-filter-item"
+                            onClick={() => onTypeChange(type)}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                textAlign: 'left',
+                                background: 'transparent',
+                                border: 'none',
+                                borderLeft: activeType === type
+                                    ? '4px solid var(--orange)'
+                                    : '2px solid rgba(255, 255, 255, 0.1)',
+                                padding: '12px 0 12px 20px',
+                                color: activeType === type ? 'var(--white)' : 'var(--text-dim)',
+                                fontFamily: 'Barlow Condensed, sans-serif',
+                                fontWeight: activeType === type ? 800 : 700,
+                                fontSize: '1.4rem',
+                                textTransform: 'uppercase',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease',
+                                width: '100%',
+                                position: 'relative'
                             }}
                         >
-                            <span className="filter-chip-icon">
-                                {activeType === type && (
-                                    <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                                        <path d="M1 4L3.5 6.5L9 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                )}
-                            </span>
-                            {typeLabels[type] || type}
+                            {(typeLabels[type] || type).toUpperCase()}
                         </button>
                     ))}
                 </div>
@@ -348,21 +382,22 @@ export function FilterSidebar({
             )}
 
             {/* Price slider */}
-            {priceMax !== undefined && activePriceMax !== undefined && onPriceMaxChange && (
+            {priceMax !== undefined && activePriceMax !== undefined && onPriceRangeChange && (
                 <div className="filter-group">
                     <div className="filter-group-header">
-                        <h4 className="filter-group-title">Budget max</h4>
-                        {activePriceMax !== priceMax && (
-                            <button className="filter-reset" onClick={() => onPriceMaxChange(priceMax)}>
+                        <h4 className="filter-group-title">Budget</h4>
+                        {(activePriceMin !== 0 || activePriceMax !== priceMax) && (
+                            <button className="filter-reset" onClick={() => onPriceRangeChange(0, priceMax)}>
                                 Reset
                             </button>
                         )}
                     </div>
-                    <RangeSlider
+                    <DualRangeSlider
                         min={0}
                         max={priceMax}
-                        value={activePriceMax}
-                        onChange={onPriceMaxChange}
+                        valueMin={activePriceMin || 0}
+                        valueMax={activePriceMax}
+                        onChange={onPriceRangeChange}
                         formatLabel={(v) => `€ ${formatPrice(v)}`}
                         step={500}
                     />
@@ -370,13 +405,7 @@ export function FilterSidebar({
             )}
 
             {/* Result count */}
-            <div className="filter-result-count">
-                <div className="filter-result-pulse" />
-                <span className="filter-result-number">{totalResults}</span>
-                <span className="filter-result-label">
-                    {totalResults === 1 ? 'risultato' : 'risultati'}
-                </span>
-            </div>
+
         </div>
     )
 
@@ -404,18 +433,31 @@ export function FilterSidebar({
             {/* Desktop sidebar */}
             <aside className="filter-sidebar">
                 <div className="filter-sidebar-header">
-                    <div className="filter-sidebar-title-row">
-                        <div className="filter-sidebar-icon">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                                <line x1="4" y1="6" x2="20" y2="6" />
-                                <circle cx="9" cy="6" r="2" fill="var(--orange)" />
-                                <line x1="4" y1="12" x2="20" y2="12" />
-                                <circle cx="15" cy="12" r="2" fill="var(--orange)" />
-                                <line x1="4" y1="18" x2="20" y2="18" />
-                                <circle cx="7" cy="18" r="2" fill="var(--orange)" />
-                            </svg>
+                    <div className="filter-sidebar-title-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div className="filter-sidebar-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                                    <line x1="4" y1="6" x2="20" y2="6" />
+                                    <circle cx="9" cy="6" r="2" fill="var(--orange)" />
+                                    <line x1="4" y1="12" x2="20" y2="12" />
+                                    <circle cx="15" cy="12" r="2" fill="var(--orange)" />
+                                    <line x1="4" y1="18" x2="20" y2="18" />
+                                    <circle cx="7" cy="18" r="2" fill="var(--orange)" />
+                                </svg>
+                            </div>
+                            <h3>FILTRI</h3>
                         </div>
-                        <h3>FILTRI</h3>
+                        <h3 style={{
+                            margin: 0,
+                            fontFamily: 'Barlow Condensed, sans-serif',
+                            fontWeight: 800,
+                            fontSize: '0.85rem',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.2em',
+                            color: 'var(--text-muted)'
+                        }}>
+                            {totalResults} MOTO
+                        </h3>
                     </div>
                 </div>
                 {filterContent}

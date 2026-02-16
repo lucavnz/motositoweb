@@ -52,17 +52,16 @@ export function MotorcycleCard({ motorcycle }: MotorcycleCardProps) {
                 ) : (
                     <div className="skeleton" style={{ width: '100%', height: '100%' }} />
                 )}
-                <div className="moto-card-badge">
-                    {typeLabels[motorcycle.type] || motorcycle.type}
-                </div>
+
             </div>
             <div className="moto-card-info">
                 {motorcycle.brand && (
-                    <div className="moto-card-brand">{motorcycle.brand.name}</div>
+                    <div className="moto-card-brand">
+                        {motorcycle.brand.name} {motorcycle.year}
+                    </div>
                 )}
                 <div className="moto-card-model">{motorcycle.model}</div>
                 <div className="moto-card-meta">
-                    <span>{motorcycle.year}</span>
                     {motorcycle.condition === 'usata' && motorcycle.kilometers && (
                         <span>{motorcycle.kilometers.toLocaleString('it-IT')} km</span>
                     )}

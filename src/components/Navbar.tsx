@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
@@ -24,8 +25,15 @@ export function Navbar({ brands }: { brands: Brand[] }) {
     return (
         <>
             <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
-                <Link href="/" className="navbar-logo">
-                    AVANZI <span className="logo-accent">MOTO</span>
+                <Link href="/" className="navbar-logo" style={{ display: 'flex', alignItems: 'center' }}>
+                    <Image
+                        src="/AvanzimotoLOGO.webp"
+                        alt="Avanzi Moto Logo"
+                        width={250}
+                        height={50}
+                        priority
+                        style={{ height: '50px', width: 'auto', objectFit: 'contain' }}
+                    />
                 </Link>
 
                 <ul className="navbar-center">
