@@ -60,13 +60,14 @@ export function UsedCatalogClient({
 
     const [activeYearMin, setActiveYearMin] = useState(yearRange[0])
     const [activeYearMax, setActiveYearMax] = useState(yearRange[1])
+    const [activePriceMin, setActivePriceMin] = useState(0)
     const [activePriceMax, setActivePriceMax] = useState(maxPrice)
 
     const filtered = motorcycles.filter((m) => {
         const typeMatch = activeType === 'all' || m.type === activeType
         const brandMatch = activeBrand === 'all' || m.brand?.slug.current === activeBrand
         const yearMatch = m.year >= activeYearMin && m.year <= activeYearMax
-        const priceMatch = !m.price || m.price <= activePriceMax
+        const priceMatch = !m.price || (m.price >= activePriceMin && m.price <= activePriceMax)
         return typeMatch && brandMatch && yearMatch && priceMatch
     })
 
@@ -88,8 +89,12 @@ export function UsedCatalogClient({
                         setActiveYearMax(max)
                     }}
                     priceMax={maxPrice}
+                    activePriceMin={activePriceMin}
                     activePriceMax={activePriceMax}
-                    onPriceMaxChange={setActivePriceMax}
+                    onPriceRangeChange={(min, max) => {
+                        setActivePriceMin(min)
+                        setActivePriceMax(max)
+                    }}
                     totalResults={filtered.length}
                 />
                 {filtered.length > 0 ? (
