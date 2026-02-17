@@ -47,13 +47,12 @@ export default async function BrandPage({ params }: PageProps) {
 
     return (
         <>
-            <div className="page-header">
-                <h1>
-                    <span>{brand.name}</span> — Moto Nuove
-                </h1>
+            <div className="brand-header">
+                <span className="brand-header-label">CATALOGO MOTO</span>
+                <h1>Moto Nuove {brand.name}</h1>
                 <p>
                     Scopri la gamma completa di moto {brand.name} nuove disponibili presso
-                    Avanzi Moto.
+                    Avanzi Moto, concessionario ufficiale a Bagnolo Mella, BRESCIA.
                 </p>
             </div>
             <section className="section">

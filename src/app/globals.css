@@ -43,6 +43,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── SITE CONTAINER (global max-width) ───────────────── */
+
+.site-container {
+  max-width: 1400px;
+  margin-inline: auto;
+  width: 100%;
+}
+
 h1,
 h2,
 h3,
@@ -339,6 +347,8 @@ img {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.3em;
+  margin-right: -0.3em;
+  /* Optical centering */
   color: var(--orange);
   margin-bottom: 16px;
   animation: fade-in 0.8s ease-out 0.2s both;
@@ -372,8 +382,10 @@ img {
 .hero-scroll {
   position: absolute;
   bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: fit-content;
   z-index: 5;
   display: flex;
   flex-direction: column;
@@ -460,7 +472,9 @@ img {
 /* ── SECTIONS ────────────────────────────────────────── */
 
 .section {
-  padding: 100px 40px;
+  padding: 65px 40px;
+  max-width: 1400px;
+  margin-inline: auto;
 }
 
 .section-header {
@@ -484,36 +498,187 @@ img {
   margin-top: 16px;
 }
 
-/* ── BRANDS STRIP ────────────────────────────────────── */
+/* ── FEATURED BLOCKS (Zigzag) ────────────────────────── */
 
-.brands-strip {
+.featured-blocks {
+  padding: 100px 0 0;
+  max-width: 1400px;
+  margin-inline: auto;
+}
+
+.featured-blocks-header {
+  text-align: center;
+  padding: 0 40px 80px;
+}
+
+.featured-blocks-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  margin-right: -0.3em;
+  /* Optical centering */
+  color: var(--orange);
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.featured-blocks-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.featured-blocks-title span {
+  color: var(--orange);
+}
+
+.featured-blocks-subtitle {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ── Single Block ── */
+
+.featured-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 480px;
+}
+
+.featured-block--reverse {
+  direction: rtl;
+}
+
+.featured-block--reverse>* {
+  direction: ltr;
+}
+
+/* ── Block Image ── */
+
+.featured-block-image {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-card);
+}
+
+.featured-block-image img {
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.featured-block:hover .featured-block-image img {
+  transform: scale(1.04);
+}
+
+.featured-block-placeholder {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 60px;
-  flex-wrap: wrap;
-  padding: 60px 40px;
+  background: var(--bg-card);
+}
+
+.featured-block-placeholder-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(6rem, 12vw, 10rem);
+  font-weight: 900;
+  color: rgba(255, 102, 0, 0.06);
+  line-height: 1;
+  user-select: none;
+}
+
+/* ── Block Text ── */
+
+.featured-block-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 60px;
   background: var(--bg-panel);
+  position: relative;
 }
 
-.brand-logo-item {
+.featured-block:nth-child(odd) .featured-block-text {
+  background: var(--bg-card);
+}
+
+.featured-block:nth-child(even) .featured-block-text {
+  background: var(--bg-card);
+}
+
+/* ── Block Label (— 01) ── */
+
+.featured-block-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.featured-block-label-line {
+  width: 32px;
+  height: 2px;
+  background: var(--orange);
+  flex-shrink: 0;
+}
+
+.featured-block-label-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+.featured-block-heading {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text);
+  line-height: 1.05;
+  margin-bottom: 20px;
+  letter-spacing: 0.01em;
+}
+
+.featured-block-desc {
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.8;
+  max-width: 440px;
+}
+
+/* ── Block Dots ── */
+
+.featured-block-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 32px;
+}
+
+.featured-block-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--orange);
   opacity: 0.5;
-  transition: opacity var(--transition-fast);
-  filter: grayscale(1) brightness(2);
-  height: 40px;
 }
 
-.brand-logo-item:hover {
+.featured-block-dots span:first-child {
   opacity: 1;
-  filter: grayscale(0) brightness(1);
 }
 
 /* ── MOTORCYCLE GRID ─────────────────────────────────── */
 
 .moto-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 2px;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 45px;
 }
 
 .moto-card {
@@ -532,7 +697,7 @@ img {
 .moto-card-image {
   position: relative;
   width: 100%;
-  aspect-ratio: 4/3;
+  aspect-ratio: 1/1;
   overflow: hidden;
   background: var(--skeleton);
 }
@@ -951,40 +1116,42 @@ img {
 .filter-mobile-toggle {
   display: none;
   align-items: center;
-  gap: 10px;
-  padding: 12px 24px;
-  background: var(--bg-card);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: none;
+  border-left: 3px solid var(--orange);
+  border-radius: 0;
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--text);
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
   cursor: pointer;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
   transition: all 0.2s ease;
   position: relative;
 }
 
-.filter-mobile-toggle:hover {
-  background: var(--bg-hover);
-  border-color: rgba(255, 255, 255, 0.15);
+.filter-mobile-toggle:hover,
+.filter-mobile-toggle:active {
+  background: rgba(255, 107, 0, 0.08);
+  color: var(--text);
 }
 
 .filter-mobile-toggle svg {
   color: var(--orange);
+  width: 16px;
+  height: 16px;
 }
 
 .filter-mobile-badge {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   background: var(--orange);
   border-radius: 50%;
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  margin-left: 2px;
   box-shadow: 0 0 6px rgba(255, 107, 0, 0.6);
 }
 
@@ -1234,50 +1401,7 @@ img {
   object-fit: cover;
 }
 
-/* ── FEATURED SECTION ────────────────────────────────── */
-
-.featured-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 500px;
-}
-
-.featured-image {
-  position: relative;
-  overflow: hidden;
-  background: var(--skeleton);
-}
-
-.featured-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.featured-text {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 80px 60px;
-  background: var(--bg-panel);
-}
-
-.featured-text h2 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  margin-bottom: 24px;
-  color: var(--text);
-}
-
-.featured-text h2 span {
-  color: var(--orange);
-}
-
-.featured-text p {
-  color: var(--text-muted);
-  font-size: 1rem;
-  line-height: 1.8;
-  max-width: 500px;
-}
+/* (featured-section styles moved to featured-blocks above) */
 
 /* ── CTA SECTION ─────────────────────────────────────── */
 
@@ -1483,6 +1607,8 @@ img {
 .page-header {
   padding: 120px 40px 60px;
   background: var(--bg-panel);
+  max-width: 1400px;
+  margin-inline: auto;
 }
 
 .page-header h1 {
@@ -1499,6 +1625,53 @@ img {
   font-size: 1rem;
   margin-top: 12px;
   max-width: 600px;
+}
+
+/* ── BRAND HEADER ────────────────────────────────────── */
+
+.brand-header {
+  padding: 120px 40px 48px;
+  background: var(--bg);
+  max-width: 1400px;
+  margin-inline: auto;
+  position: relative;
+}
+
+.brand-header::after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 40px;
+  right: 40px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.brand-header-label {
+  display: inline-block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--orange);
+  margin-bottom: 12px;
+}
+
+.brand-header h1 {
+  font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+  color: var(--text);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.brand-header p {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin-top: 14px;
+  max-width: 500px;
+  line-height: 1.7;
 }
 
 /* ── BACK LINK ───────────────────────────────────────── */
@@ -1542,7 +1715,9 @@ img {
 /* ── LATEST BIKES SECTION ────────────────────────────── */
 
 .latest-section {
-  padding: 100px 40px;
+  padding: 100px 40px 60px;
+  max-width: 1400px;
+  margin-inline: auto;
 }
 
 /* ── RESPONSIVE ──────────────────────────────────────── */
@@ -1564,12 +1739,24 @@ img {
     grid-template-columns: 1fr;
   }
 
-  .featured-section {
+  .featured-block {
     grid-template-columns: 1fr;
   }
 
-  .featured-text {
+  .featured-block--reverse {
+    direction: ltr;
+  }
+
+  .featured-block-image {
+    min-height: 280px;
+  }
+
+  .featured-block-text {
     padding: 40px 24px;
+  }
+
+  .featured-blocks-header {
+    padding: 0 24px 50px;
   }
 
   .detail-content {
@@ -1593,6 +1780,20 @@ img {
 
   .page-header {
     padding: 100px 24px 40px;
+  }
+
+  .brand-header {
+    padding: 100px 24px 10px;
+    border-bottom: none;
+  }
+
+  .brand-header+.section {
+    padding-top: 0;
+  }
+
+  .filter-mobile-toggle {
+    margin-top: 24px;
+    margin-bottom: 9px;
   }
 
   .gallery-thumbs {
