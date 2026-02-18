@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Barlow_Condensed, Inter } from 'next/font/google'
 import './globals.css'
 import { Navbar } from '@/components/Navbar'
@@ -53,6 +53,10 @@ export async function generateMetadata(): Promise<Metadata> {
       follow: true,
     },
   }
+}
+
+export const viewport: Viewport = {
+  viewportFit: 'cover',
 }
 
 export default async function RootLayout({

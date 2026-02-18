@@ -83,11 +83,13 @@ img {
   left: 0;
   right: 0;
   z-index: 1000;
-  height: 72px;
+  height: calc(72px + env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 48px;
+  padding-left: 48px;
+  padding-right: 48px;
   background: transparent;
   transition: background 0.4s ease;
 }
@@ -1784,7 +1786,10 @@ img {
 
   .brand-header {
     padding: 100px 24px 10px;
-    border-bottom: none;
+  }
+
+  .brand-header::after {
+    display: none;
   }
 
   .brand-header+.section {
