@@ -24,13 +24,12 @@ export default async function UsatoPage() {
 
     return (
         <>
-            <div className="page-header">
-                <h1>
-                    MOTO <span>USATE</span>
-                </h1>
+            <div className="brand-header">
+                <span className="brand-header-label">CATALOGO</span>
+                <h1>Moto Usate</h1>
                 <p>
-                    Tutte le moto usate disponibili in concessionario. Garantite e
-                    revisionate.
+                    Scopri tutte le moto usate disponibili presso Avanzi Moto,
+                    concessionario ufficiale a Bagnolo Mella, BRESCIA.
                 </p>
             </div>
             <section className="section">

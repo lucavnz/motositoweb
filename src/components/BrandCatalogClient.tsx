@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { FilterSidebar } from '@/components/FilterSidebar'
 import { MotorcycleCard } from '@/components/MotorcycleCard'
 
@@ -24,12 +24,16 @@ interface Motorcycle {
     }
 }
 
+const PAGE_SIZE = 12
+
 export function BrandCatalogClient({
     motorcycles,
 }: {
     motorcycles: Motorcycle[]
 }) {
     const [activeType, setActiveType] = useState('all')
+    const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+    const sentinelRef = useRef<HTMLDivElement>(null)
 
     const uniqueTypes = useMemo(() => {
         const types = new Set(motorcycles.map((m) => m.type))
@@ -60,6 +64,36 @@ export function BrandCatalogClient({
         return typeMatch && yearMatch && priceMatch
     })
 
+    // Reset visible count when filters change
+    useEffect(() => {
+        setVisibleCount(PAGE_SIZE)
+    }, [activeType, activeYearMin, activeYearMax, activePriceMin, activePriceMax])
+
+    const visibleMotos = filtered.slice(0, visibleCount)
+    const hasMore = visibleCount < filtered.length
+
+    // IntersectionObserver for infinite scroll
+    const loadMore = useCallback(() => {
+        setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, filtered.length))
+    }, [filtered.length])
+
+    useEffect(() => {
+        const sentinel = sentinelRef.current
+        if (!sentinel) return
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasMore) {
+                    loadMore()
+                }
+            },
+            { rootMargin: '200px' }
+        )
+
+        observer.observe(sentinel)
+        return () => observer.disconnect()
+    }, [hasMore, loadMore])
+
     return (
         <div className="catalog-layout">
             <div className="catalog-main">
@@ -84,11 +118,18 @@ export function BrandCatalogClient({
                     totalResults={filtered.length}
                 />
                 {filtered.length > 0 ? (
-                    <div className="catalog-grid">
-                        {filtered.map((moto) => (
-                            <MotorcycleCard key={moto._id} motorcycle={moto} />
-                        ))}
-                    </div>
+                    <>
+                        <div className="catalog-grid">
+                            {visibleMotos.map((moto) => (
+                                <MotorcycleCard key={moto._id} motorcycle={moto} />
+                            ))}
+                        </div>
+                        {hasMore && (
+                            <div ref={sentinelRef} className="catalog-sentinel">
+                                <span className="catalog-loading">Caricamento…</span>
+                            </div>
+                        )}
+                    </>
                 ) : (
                     <div className="empty-state">
                         <h3>NESSUNA MOTO TROVATA</h3>

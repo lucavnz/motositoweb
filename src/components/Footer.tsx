@@ -1,11 +1,11 @@
 import Link from 'next/link'
 import { client } from '@/lib/sanity.client'
-import { siteSettingsQuery, allBrandsQuery } from '@/lib/sanity.queries'
+import { siteSettingsQuery, navBrandsQuery } from '@/lib/sanity.queries'
 
 export async function Footer() {
     const [settings, brands] = await Promise.all([
         client.fetch(siteSettingsQuery),
-        client.fetch(allBrandsQuery),
+        client.fetch(navBrandsQuery),
     ])
 
     return (

@@ -4,7 +4,7 @@ import './globals.css'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { client } from '@/lib/sanity.client'
-import { allBrandsQuery, siteSettingsQuery } from '@/lib/sanity.queries'
+import { navBrandsQuery, siteSettingsQuery } from '@/lib/sanity.queries'
 
 const barlowCondensed = Barlow_Condensed({
   subsets: ['latin'],
@@ -64,7 +64,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const brands = await client.fetch(allBrandsQuery)
+  const brands = await client.fetch(navBrandsQuery)
 
   return (
     <html lang="it" className={`${barlowCondensed.variable} ${inter.variable}`} suppressHydrationWarning>

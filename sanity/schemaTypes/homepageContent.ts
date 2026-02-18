@@ -102,7 +102,7 @@ export default defineType({
             rows: 3,
             group: 'featured',
         }),
-        imageField('featuredBlock4Image', 'Blocco 4 — Immagine'),
+        // featuredBlock4Image removed — no longer used in layout
 
         // ── Legacy featured (backward compat) ──
         defineField({
@@ -132,7 +132,7 @@ export default defineType({
             type: 'string',
             group: 'cta',
         }),
-        imageField('ctaImage', 'Immagine CTA'),
+        // ctaImage removed — CTA section no longer uses a background image
     ],
     preview: {
         prepare() {

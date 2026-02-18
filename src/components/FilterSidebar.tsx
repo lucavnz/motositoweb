@@ -6,6 +6,7 @@ interface FilterSidebarProps {
     types: string[]
     activeType: string
     onTypeChange: (type: string) => void
+    showTypeFilter?: boolean
     yearRange?: [number, number]
     activeYearMin?: number
     activeYearMax?: number
@@ -226,6 +227,7 @@ export function FilterSidebar({
     types,
     activeType,
     onTypeChange,
+    showTypeFilter = true,
     yearRange,
     activeYearMin,
     activeYearMax,
@@ -250,55 +252,25 @@ export function FilterSidebar({
     const filterContent = (
         <div className="filter-sidebar-content">
             {/* Type filter - Vertical List Style */}
-            <div className="filter-group" style={{ padding: '18px 24px 24px' }}>
-                <div className="filter-group-header" style={{ display: 'none' }}>
-                    {/* Hidden header since user asked to remove title */}
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-                    <button
-                        className="type-filter-item"
-                        onClick={() => onTypeChange('all')}
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            textAlign: 'left',
-                            background: 'transparent',
-                            border: 'none',
-                            borderLeft: activeType === 'all'
-                                ? '4px solid var(--orange)'
-                                : '2px solid rgba(255, 255, 255, 0.1)',
-                            padding: '12px 0 12px 20px',
-                            color: activeType === 'all' ? 'var(--white)' : 'var(--text-dim)',
-                            fontFamily: 'Barlow Condensed, sans-serif',
-                            fontWeight: activeType === 'all' ? 800 : 700,
-                            fontSize: '1.4rem',
-                            textTransform: 'uppercase',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s ease',
-                            width: '100%',
-                            position: 'relative'
-                        }}
-                    >
-                        TUTTI
-                    </button>
-                    {types.filter(t => t !== 'all').map((type) => (
+            {showTypeFilter && (
+                <div className="filter-group" style={{ padding: '18px 24px 24px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
                         <button
-                            key={type}
                             className="type-filter-item"
-                            onClick={() => onTypeChange(type)}
+                            onClick={() => onTypeChange('all')}
                             style={{
                                 display: 'flex',
                                 alignItems: 'center',
                                 textAlign: 'left',
                                 background: 'transparent',
                                 border: 'none',
-                                borderLeft: activeType === type
+                                borderLeft: activeType === 'all'
                                     ? '4px solid var(--orange)'
                                     : '2px solid rgba(255, 255, 255, 0.1)',
                                 padding: '12px 0 12px 20px',
-                                color: activeType === type ? 'var(--white)' : 'var(--text-dim)',
+                                color: activeType === 'all' ? 'var(--white)' : 'var(--text-dim)',
                                 fontFamily: 'Barlow Condensed, sans-serif',
-                                fontWeight: activeType === type ? 800 : 700,
+                                fontWeight: activeType === 'all' ? 800 : 700,
                                 fontSize: '1.4rem',
                                 textTransform: 'uppercase',
                                 cursor: 'pointer',
@@ -307,13 +279,42 @@ export function FilterSidebar({
                                 position: 'relative'
                             }}
                         >
-                            {(typeLabels[type] || type).toUpperCase()}
+                            TUTTI
                         </button>
-                    ))}
+                        {types.filter(t => t !== 'all').map((type) => (
+                            <button
+                                key={type}
+                                className="type-filter-item"
+                                onClick={() => onTypeChange(type)}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    textAlign: 'left',
+                                    background: 'transparent',
+                                    border: 'none',
+                                    borderLeft: activeType === type
+                                        ? '4px solid var(--orange)'
+                                        : '2px solid rgba(255, 255, 255, 0.1)',
+                                    padding: '12px 0 12px 20px',
+                                    color: activeType === type ? 'var(--white)' : 'var(--text-dim)',
+                                    fontFamily: 'Barlow Condensed, sans-serif',
+                                    fontWeight: activeType === type ? 800 : 700,
+                                    fontSize: '1.4rem',
+                                    textTransform: 'uppercase',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease',
+                                    width: '100%',
+                                    position: 'relative'
+                                }}
+                            >
+                                {(typeLabels[type] || type).toUpperCase()}
+                            </button>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
 
-            {/* Brand filter (used page only) */}
+            {/* Brand filter */}
             {brands && brands.length > 0 && onBrandChange && (
                 <div className="filter-group">
                     <div className="filter-group-header">
@@ -329,13 +330,6 @@ export function FilterSidebar({
                             className={`filter-chip ${activeBrand === 'all' ? 'filter-chip--active' : ''}`}
                             onClick={() => onBrandChange('all')}
                         >
-                            <span className="filter-chip-icon">
-                                {activeBrand === 'all' && (
-                                    <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                                        <path d="M1 4L3.5 6.5L9 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                )}
-                            </span>
                             Tutti
                         </button>
                         {brands.map((brand) => (
@@ -344,13 +338,6 @@ export function FilterSidebar({
                                 className={`filter-chip ${activeBrand === brand.slug.current ? 'filter-chip--active' : ''}`}
                                 onClick={() => onBrandChange(brand.slug.current)}
                             >
-                                <span className="filter-chip-icon">
-                                    {activeBrand === brand.slug.current && (
-                                        <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                                            <path d="M1 4L3.5 6.5L9 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    )}
-                                </span>
                                 {brand.name}
                             </button>
                         ))}

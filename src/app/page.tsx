@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     'Avanzi Moto: concessionario ufficiale multimarca. Scopri la nostra gamma di moto nuove e usate KTM, Husqvarna, Kymco, Voge, Beta, Fantic, Piaggio.',
 }
 
-// ── Fallback data for the 4 featured blocks ──
+// ── Fallback data for the 3 featured blocks ──
 const FEATURED_BLOCKS = [
   {
     key: 'featuredBlock1',
@@ -40,13 +40,6 @@ const FEATURED_BLOCKS = [
     fallbackDesc:
       'Il nostro team di tecnici specializzati si prende cura della tua moto con competenza, passione e ricambi originali.',
   },
-  {
-    key: 'featuredBlock4',
-    tag: 'VIENI A TROVARCI',
-    fallbackTitle: 'IL TUO PROSSIMO RIDE',
-    fallbackDesc:
-      'Vieni in concessionario per una prova su strada senza impegno. Il tuo prossimo ride ti sta aspettando.',
-  },
 ]
 
 export default async function HomePage() {
@@ -59,9 +52,7 @@ export default async function HomePage() {
     ? urlFor(homepage.heroImage).width(1920).height(1080).format('webp').quality(80).url()
     : null
 
-  const ctaUrl = homepage?.ctaImage
-    ? urlFor(homepage.ctaImage).width(1920).height(800).format('webp').quality(75).url()
-    : null
+  // ctaImage no longer used
 
   // Build image URLs for the 4 featured blocks
   const blockImages = FEATURED_BLOCKS.map(({ key }) => {
@@ -106,8 +97,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── FEATURED BLOCKS — first pair ── */}
-      <section className="featured-blocks">
+      {/* ── CHI SIAMO ── */}
+      <section className="about-section">
         <div className="featured-blocks-header">
           <span className="featured-blocks-tag">SCOPRI</span>
           <h2 className="featured-blocks-title">
@@ -118,56 +109,70 @@ export default async function HomePage() {
           </p>
         </div>
 
-        {FEATURED_BLOCKS.slice(0, 2).map((block, idx) => {
-          const title =
-            (homepage?.[`${block.key}Title` as keyof typeof homepage] as string) ||
-            block.fallbackTitle
-          const desc =
-            (homepage?.[`${block.key}Description` as keyof typeof homepage] as string) ||
-            block.fallbackDesc
-          const imgUrl = blockImages[idx]
-          const isReversed = idx % 2 !== 0
+        {/* Stats row */}
+        <div className="about-stats">
+          <div className="about-stat-card">
+            <span className="about-stat-number">70</span>
+            <span className="about-stat-label">ANNI DI ESPERIENZA</span>
+          </div>
+          <div className="about-stat-card">
+            <span className="about-stat-number">7</span>
+            <span className="about-stat-label">BRAND UFFICIALI</span>
+          </div>
+          <div className="about-stat-card">
+            <span className="about-stat-number">1K</span>
+            <span className="about-stat-label">CLIENTI SODDISFATTI</span>
+          </div>
+        </div>
 
-          return (
-            <div
-              key={block.key}
-              className={`featured-block ${isReversed ? 'featured-block--reverse' : ''}`}
-            >
-              <div className="featured-block-image">
-                {imgUrl ? (
-                  <Image
-                    src={imgUrl}
-                    alt={title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    style={{ objectFit: 'cover' }}
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="featured-block-placeholder">
-                    <span className="featured-block-placeholder-num">
-                      {String(idx + 1).padStart(2, '0')}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              <div className="featured-block-text">
-                <div className="featured-block-label">
-                  <span className="featured-block-label-line" />
-                  <span className="featured-block-label-num">
-                    {String(idx + 1).padStart(2, '0')}
-                  </span>
-                </div>
-                <h3 className="featured-block-heading">{title}</h3>
-                <p className="featured-block-desc">{desc}</p>
-                <div className="featured-block-dots">
-                  <span /><span /><span />
-                </div>
-              </div>
+        {/* Value proposition cards */}
+        <div className="about-values">
+          <div className="about-value-card about-value-card--wide">
+            {blockImages[0] ? (
+              <Image
+                src={blockImages[0]}
+                alt="Passione su due ruote"
+                fill
+                sizes="(max-width: 768px) 100vw, 60vw"
+                style={{ objectFit: 'cover' }}
+                loading="lazy"
+              />
+            ) : (
+              <div className="about-value-card-bg" />
+            )}
+            <div className="about-value-card-overlay" />
+            <div className="about-value-card-content">
+              <span className="about-value-tag">DAL 1950</span>
+              <h3 className="about-value-heading">PASSIONE SU DUE RUOTE</h3>
+              <p className="about-value-desc">
+                Oltre 70 anni di esperienza nel mondo delle moto.
+                Avanzi Moto è il punto di riferimento per ogni motociclista a Brescia e provincia.
+              </p>
             </div>
-          )
-        })}
+          </div>
+          <div className="about-value-card">
+            {blockImages[1] ? (
+              <Image
+                src={blockImages[1]}
+                alt="Moto per ogni stile"
+                fill
+                sizes="(max-width: 768px) 100vw, 40vw"
+                style={{ objectFit: 'cover' }}
+                loading="lazy"
+              />
+            ) : (
+              <div className="about-value-card-bg" />
+            )}
+            <div className="about-value-card-overlay" />
+            <div className="about-value-card-content">
+              <span className="about-value-tag">LA TUA SCELTA</span>
+              <h3 className="about-value-heading">MOTO PER OGNI STILE</h3>
+              <p className="about-value-desc">
+                Dalla strada al fuoristrada, dallo scooter alla naked. Trova il mezzo perfetto per le tue avventure.
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ── LATEST BIKES ── */}
@@ -205,8 +210,8 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ── FEATURED BLOCKS — second pair ── */}
-      <section className="featured-blocks">
+      {/* ── IL NOSTRO IMPEGNO ── */}
+      <section className="services-section">
         <div className="featured-blocks-header">
           <span className="featured-blocks-tag">SERVIZI</span>
           <h2 className="featured-blocks-title">
@@ -217,75 +222,68 @@ export default async function HomePage() {
           </p>
         </div>
 
-        {FEATURED_BLOCKS.slice(2, 4).map((block, idx) => {
-          const realIdx = idx + 2
-          const title =
-            (homepage?.[`${block.key}Title` as keyof typeof homepage] as string) ||
-            block.fallbackTitle
-          const desc =
-            (homepage?.[`${block.key}Description` as keyof typeof homepage] as string) ||
-            block.fallbackDesc
-          const imgUrl = blockImages[realIdx]
-          const isReversed = realIdx % 2 !== 0
-
-          return (
-            <div
-              key={block.key}
-              className={`featured-block ${isReversed ? 'featured-block--reverse' : ''}`}
-            >
-              <div className="featured-block-image">
-                {imgUrl ? (
-                  <Image
-                    src={imgUrl}
-                    alt={title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    style={{ objectFit: 'cover' }}
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="featured-block-placeholder">
-                    <span className="featured-block-placeholder-num">
-                      {String(realIdx + 1).padStart(2, '0')}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              <div className="featured-block-text">
-                <div className="featured-block-label">
-                  <span className="featured-block-label-line" />
-                  <span className="featured-block-label-num">
-                    {String(realIdx + 1).padStart(2, '0')}
-                  </span>
-                </div>
-                <h3 className="featured-block-heading">{title}</h3>
-                <p className="featured-block-desc">{desc}</p>
-                <div className="featured-block-dots">
-                  <span /><span /><span />
-                </div>
-              </div>
+        <div className="services-grid">
+          <div className="service-card">
+            <div className="service-card-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" /></svg>
             </div>
-          )
-        })}
+            <h3 className="service-card-title">ASSISTENZA DEDICATA</h3>
+            <p className="service-card-desc">
+              Il nostro team di tecnici specializzati si prende cura della tua moto con competenza, passione e ricambi originali.
+            </p>
+            <div className="service-card-line" />
+          </div>
+          <div className="service-card">
+            <div className="service-card-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" /></svg>
+            </div>
+            <h3 className="service-card-title">PROVA SU STRADA</h3>
+            <p className="service-card-desc">
+              Prova la moto dei tuoi sogni senza impegno. Il tuo prossimo ride ti sta aspettando nel nostro showroom.
+            </p>
+            <div className="service-card-line" />
+          </div>
+          <div className="service-card">
+            <div className="service-card-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" y1="22.08" x2="12" y2="12" /></svg>
+            </div>
+            <h3 className="service-card-title">RICAMBI ORIGINALI</h3>
+            <p className="service-card-desc">
+              Ampia disponibilità di ricambi originali e accessori per tutti i brand che trattiamo.
+            </p>
+            <div className="service-card-line" />
+          </div>
+        </div>
+
+        {/* Wide feature card */}
+        <div className="services-feature">
+          <div className="about-value-card about-value-card--full">
+            {blockImages[2] ? (
+              <Image
+                src={blockImages[2]}
+                alt="Il tuo prossimo ride"
+                fill
+                sizes="100vw"
+                style={{ objectFit: 'cover' }}
+                loading="lazy"
+              />
+            ) : (
+              <div className="about-value-card-bg" />
+            )}
+            <div className="about-value-card-overlay" />
+            <div className="about-value-card-content about-value-card-content--center">
+              <span className="about-value-tag">VIENI A TROVARCI</span>
+              <h3 className="about-value-heading">IL TUO PROSSIMO RIDE</h3>
+              <p className="about-value-desc">
+                Vieni in concessionario per una prova su strada senza impegno. Ti aspettiamo a Bagnolo Mella, Brescia.
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ── CTA SECTION ── */}
       <section className="cta-section">
-        <div className="cta-bg">
-          {ctaUrl ? (
-            <Image
-              src={ctaUrl}
-              alt={homepage?.ctaImage?.alt || 'CTA Background'}
-              fill
-              sizes="100vw"
-              style={{ objectFit: 'cover' }}
-              loading="lazy"
-            />
-          ) : (
-            <div className="skeleton" style={{ width: '100%', height: '100%' }} />
-          )}
-        </div>
         <h2>
           {homepage?.ctaTitle || (
             <>
@@ -297,9 +295,6 @@ export default async function HomePage() {
           {homepage?.ctaSubtitle ||
             'Vieni a trovarci in concessionario. Prova la tua prossima moto.'}
         </p>
-        <Link href="/usato" className="hero-cta">
-          Esplora il catalogo
-        </Link>
       </section>
     </>
   )

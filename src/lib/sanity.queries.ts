@@ -11,6 +11,22 @@ export const allBrandsQuery = groq`
   }
 `
 
+// Navbar/Footer: solo i marchi ufficiali con pagina dedicata
+export const navBrandsQuery = groq`
+  *[_type == "brand" && slug.current in ["ktm", "husqvarna", "voge", "kymco"]] | order(select(
+    slug.current == "ktm" => 1,
+    slug.current == "husqvarna" => 2,
+    slug.current == "voge" => 3,
+    slug.current == "kymco" => 4
+  ) asc) {
+    _id,
+    name,
+    slug,
+    logo,
+    order
+  }
+`
+
 export const brandBySlugQuery = groq`
   *[_type == "brand" && slug.current == $slug][0] {
     _id,
@@ -32,7 +48,7 @@ export const newMotorcyclesByBrandQuery = groq`
     price,
     shortDescription,
     images[] {
-      asset->,
+      asset { _ref },
       alt
     },
     brand-> {
@@ -53,9 +69,10 @@ export const allUsedMotorcyclesQuery = groq`
     condition,
     price,
     kilometers,
+    cilindrata,
     shortDescription,
     images[] {
-      asset->,
+      asset { _ref },
       alt
     },
     brand-> {
@@ -76,6 +93,7 @@ export const motorcycleBySlugQuery = groq`
     condition,
     price,
     kilometers,
+    cilindrata,
     shortDescription,
     longDescription,
     images[] {
@@ -98,7 +116,7 @@ export const allMotorcycleSlugsQuery = groq`
 `
 
 export const allBrandSlugsQuery = groq`
-  *[_type == "brand"] {
+  *[_type == "brand" && slug.current in ["ktm", "husqvarna", "kymco", "voge"]] {
     slug
   }
 `
@@ -123,13 +141,8 @@ export const homepageContentQuery = groq`
     featuredBlock3Image { asset->, alt },
     featuredBlock4Title,
     featuredBlock4Description,
-    featuredBlock4Image { asset->, alt },
     ctaTitle,
-    ctaSubtitle,
-    ctaImage {
-      asset->,
-      alt
-    }
+    ctaSubtitle
   }
 `
 
@@ -155,7 +168,7 @@ export const latestMotorcyclesQuery = groq`
     type,
     price,
     images[] {
-      asset->,
+      asset { _ref },
       alt
     },
     brand-> {

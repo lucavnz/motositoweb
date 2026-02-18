@@ -75,6 +75,19 @@ export default defineType({
             hidden: ({ document }) => document?.condition !== 'usata',
         }),
         defineField({
+            name: 'cilindrata',
+            title: 'Cilindrata (cc)',
+            type: 'number',
+            description: 'Cilindrata in cc',
+        }),
+        defineField({
+            name: 'motoItProductId',
+            title: 'Moto.it Product ID',
+            type: 'string',
+            description: 'ID annuncio su moto.it (usato dallo script di sync)',
+            hidden: true,
+        }),
+        defineField({
             name: 'shortDescription',
             title: 'Descrizione Breve',
             type: 'text',
@@ -103,7 +116,7 @@ export default defineType({
                     ],
                 },
             ],
-            validation: (Rule) => Rule.max(4),
+            validation: (Rule) => Rule.max(20),
         }),
     ],
     preview: {

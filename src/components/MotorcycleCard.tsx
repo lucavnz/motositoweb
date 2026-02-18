@@ -34,7 +34,7 @@ const typeLabels: Record<string, string> = {
 export function MotorcycleCard({ motorcycle }: MotorcycleCardProps) {
     const firstImage = motorcycle.images?.[0]
     const imageUrl = firstImage
-        ? urlFor(firstImage).width(640).height(480).format('webp').quality(80).url()
+        ? urlFor(firstImage).width(640).height(480).format('webp').quality(75).url()
         : null
 
     return (
@@ -58,14 +58,12 @@ export function MotorcycleCard({ motorcycle }: MotorcycleCardProps) {
                 {motorcycle.brand && (
                     <div className="moto-card-brand">
                         {motorcycle.brand.name} {motorcycle.year}
+                        {motorcycle.condition === 'usata' && motorcycle.kilometers && (
+                            <> · {motorcycle.kilometers.toLocaleString('it-IT')} km</>
+                        )}
                     </div>
                 )}
                 <div className="moto-card-model">{motorcycle.model}</div>
-                <div className="moto-card-meta">
-                    {motorcycle.condition === 'usata' && motorcycle.kilometers && (
-                        <span>{motorcycle.kilometers.toLocaleString('it-IT')} km</span>
-                    )}
-                </div>
                 {motorcycle.price && (
                     <div className="moto-card-price">
                         <span className="currency">€</span>{' '}
