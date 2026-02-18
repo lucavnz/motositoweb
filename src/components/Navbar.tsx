@@ -24,7 +24,7 @@ export function Navbar({ brands }: { brands: Brand[] }) {
 
     return (
         <>
-            <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
+            <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''} ${mobileOpen ? 'navbar--open' : ''}`}>
                 <Link href="/" className="navbar-logo" style={{ display: 'flex', alignItems: 'center' }}>
                     <Image
                         src="/AvanzimotoLOGO.webp"

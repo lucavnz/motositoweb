@@ -94,27 +94,9 @@ img {
   transition: background 0.4s ease;
 }
 
-/* Dark gradient covering the status bar / Dynamic Island area on mobile.
-   Prevents the hero image from bleeding through when the navbar is transparent. */
-.navbar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: calc(env(safe-area-inset-top, 0px) + 72px + 40px);
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
-  z-index: -1;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-}
-
-.navbar--scrolled {
+.navbar--scrolled,
+.navbar--open {
   background: var(--bg);
-}
-
-.navbar--scrolled::before {
-  opacity: 0;
 }
 
 .navbar-logo {
@@ -323,6 +305,19 @@ img {
   justify-content: center;
   text-align: center;
   overflow: hidden;
+}
+
+/* Dark gradient at the top of the hero — covers status bar / Dynamic Island on mobile */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(env(safe-area-inset-top, 0px) + 72px + 40px);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+  z-index: 2;
+  pointer-events: none;
 }
 
 .hero-image-wrapper {
