@@ -22,9 +22,14 @@ export function Navbar({ brands }: { brands: Brand[] }) {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
+    const isHomepage = pathname === '/'
+    // On non-homepage pages the navbar is always solid
+    const isSolid = !isHomepage || scrolled
+
     return (
         <>
-            <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''} ${mobileOpen ? 'navbar--open' : ''}`}>
+            <nav className={`navbar ${isSolid ? 'navbar--scrolled' : ''} ${mobileOpen ? 'navbar--open' : ''}`}>
+
                 <Link href="/" className="navbar-logo" style={{ display: 'flex', alignItems: 'center' }}>
                     <Image
                         src="/AvanzimotoLOGO.webp"
