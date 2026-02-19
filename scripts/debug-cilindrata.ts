@@ -75,7 +75,7 @@ async function debugCilindrata(url: string) {
     $('*').each((_, el) => {
         const text = $(el).text().trim()
         if (text.toLowerCase().includes('cilindrata') && text.length < 200) {
-            const tag = el.tagName || (el as any).name
+            const tag = (el as any).tagName || (el as any).name
             const cls = $(el).attr('class') || ''
             console.log(`  <${tag} class="${cls}"> "${text.substring(0, 100)}"`)
         }
