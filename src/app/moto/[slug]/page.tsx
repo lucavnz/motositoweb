@@ -191,7 +191,6 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
                     {/* Right column: specs + CTA */}
                     <aside className="detail-v2-sidebar">
                         <div className="detail-v2-specs-card">
-                            <h3 className="detail-v2-specs-title">SPECIFICHE</h3>
                             <div className="detail-v2-specs-list">
                                 <div className="detail-v2-spec-row">
                                     <span className="detail-v2-spec-label">Anno</span>
@@ -201,6 +200,12 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
                                     <span className="detail-v2-spec-label">Tipo</span>
                                     <span className="detail-v2-spec-value">{typeLabels[moto.type] || moto.type}</span>
                                 </div>
+                                {moto.cilindrata && (
+                                    <div className="detail-v2-spec-row">
+                                        <span className="detail-v2-spec-label">Cilindrata</span>
+                                        <span className="detail-v2-spec-value">{moto.cilindrata} cc</span>
+                                    </div>
+                                )}
                                 <div className="detail-v2-spec-row">
                                     <span className="detail-v2-spec-label">Condizione</span>
                                     <span className="detail-v2-spec-value">{moto.condition === 'nuova' ? 'Nuova' : 'Usata'}</span>

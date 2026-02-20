@@ -15,15 +15,22 @@ export function Navbar({ brands }: { brands: Brand[] }) {
     const pathname = usePathname()
     const [mobileOpen, setMobileOpen] = useState(false)
     const [scrolled, setScrolled] = useState(false)
+    const [isMounted, setIsMounted] = useState(false)
 
     useEffect(() => {
+        setIsMounted(true)
         const handleScroll = () => setScrolled(window.scrollY > 50)
+        // Ensure scroll state is strictly evaluated on mount
+        handleScroll()
+
         window.addEventListener('scroll', handleScroll, { passive: true })
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
     const isHomepage = pathname === '/'
-    // On non-homepage pages the navbar is always solid
+    // On non-homepage pages the navbar is always solid.
+    // By triggering a re-render via isMounted, we bypass Next.js 
+    // ISR caching edge cases where usePathname might be initially wrong.
     const isSolid = !isHomepage || scrolled
 
     return (
