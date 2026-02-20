@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { useDocumentOperation, useCurrentUser } from 'sanity'
+import { useClient } from 'sanity'
 import type { DocumentActionProps } from 'sanity'
 
 interface UsageInfo {
@@ -27,7 +27,7 @@ interface GenerateResult {
 
 export function generateDescriptionAction(props: DocumentActionProps) {
     const { id, type, published, draft } = props
-    const { patch } = useDocumentOperation(id, type)
+    const client = useClient({ apiVersion: '2024-01-01' })
     const [isGenerating, setIsGenerating] = useState(false)
     const [dialogOpen, setDialogOpen] = useState(false)
     const [result, setResult] = useState<GenerateResult | null>(null)
@@ -92,10 +92,8 @@ export function generateDescriptionAction(props: DocumentActionProps) {
                 return
             }
 
-            // Save the description to the document
-            patch.execute([
-                { set: { shortDescription: data.description } }
-            ])
+            // Save the description to the document using the stable client
+            await client.patch(id).set({ shortDescription: data.description }).commit()
 
             setResult(data)
             setDialogOpen(true)
@@ -105,7 +103,7 @@ export function generateDescriptionAction(props: DocumentActionProps) {
         } finally {
             setIsGenerating(false)
         }
-    }, [doc, id, patch])
+    }, [doc, id, client])
 
     return {
         label: isGenerating ? '⏳ Generazione...' : '🤖 Genera Descrizione AI',
