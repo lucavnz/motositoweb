@@ -2330,7 +2330,7 @@ img {
 
   .detail-v2-grid {
     grid-template-columns: 1fr;
-    gap: 25px;
+    gap: 23px;
   }
 
   .detail-v2-sidebar {
