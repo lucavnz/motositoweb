@@ -17,7 +17,7 @@ import * as cheerio from 'cheerio'
 const SANITY_PROJECT_ID = '9r9hyqn3'
 const SANITY_DATASET = 'production'
 const SANITY_API_VERSION = '2024-01-01'
-const SANITY_TOKEN = 'skANNlQ3ccntXq277S4WLz5UcblnyaTuuYztEJ2w4YC0OX2j0cPKRQevqbPtQx9OxPAJcIdwYSaBxOT5UPOuNYlp01ThqeypiWhvkKviOoBazHTf4kYjCxRGRVh3ojzgC7L3V4IgHLExflXRlql5K8rgY7dbe0eaN7EBalyI4T4aQLEX29x4' // Consider moving to env var
+const SANITY_TOKEN = process.env.SANITY_API_TOKEN as string;
 
 const KTM_BASE_URL = 'https://www.ktm.com'
 const MODELS_URL = 'https://www.ktm.com/it-it/models.html'

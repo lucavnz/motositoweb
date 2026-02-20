@@ -17,7 +17,7 @@ import * as cheerio from 'cheerio'
 const SANITY_PROJECT_ID = '9r9hyqn3'
 const SANITY_DATASET = 'production'
 const SANITY_API_VERSION = '2024-01-01'
-const SANITY_TOKEN = 'sk3gjd2GXWxbJnIIhvdDkfsjucMGTPtR50FE6XaInvBR0RhYxMnzSq7Bh53JAtBLsalJxXXQCviSLkR8bGhbs1rh9LRaL8gTERuUb9rvGYQqeB4BRUyEFznR6Gb5yrLFyaukfk67L8OammmyDCo8b58Ny94pGAg7yMTFGaXZXkgg7BiN54LI'
+const SANITY_TOKEN = process.env.SANITY_API_TOKEN as string;
 
 const DEALER_BASE_URL = 'https://dealer.moto.it/avanzimoto/Usato'
 const DETAIL_AJAX_URL = 'https://dealer.moto.it/avanzimoto/Detail/Detail'
