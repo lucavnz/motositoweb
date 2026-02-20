@@ -105,7 +105,7 @@ export function generateDescriptionAction(props: DocumentActionProps) {
         } finally {
             setIsGenerating(false)
         }
-    }, [doc, id])
+    }, [doc, id, patch])
 
     return {
         label: isGenerating ? '⏳ Generazione...' : '🤖 Genera Descrizione AI',
