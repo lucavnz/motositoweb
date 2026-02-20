@@ -92,8 +92,13 @@ export function generateDescriptionAction(props: DocumentActionProps) {
                 return
             }
 
-            // Save the description to the document using the stable client
-            await client.patch(id).set({ shortDescription: data.description }).commit()
+            // Salva la descrizione in Sanity e imposta il flag AI su true
+            client.patch(id).set({
+                shortDescription: data.description,
+                isAiGeneratedDescription: true
+            }).commit().catch(err => {
+                console.error("Errore salvataggio in background su Sanity:", err);
+            });
 
             setResult(data)
             setDialogOpen(true)

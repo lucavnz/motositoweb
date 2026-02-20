@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const modelName = 'gemini-3-flash';
+        const modelName = 'gemini-2.5-flash';
 
         const generativeModel = genAI.getGenerativeModel({
             model: modelName,

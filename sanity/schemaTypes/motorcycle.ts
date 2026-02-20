@@ -94,6 +94,13 @@ export default defineType({
             rows: 3,
         }),
         defineField({
+            name: 'isAiGeneratedDescription',
+            title: 'Generata da AI',
+            type: 'boolean',
+            description: 'Indica se la descrizione breve è stata generata automaticamente dall\'Intelligenza Artificiale.',
+            initialValue: false,
+        }),
+        defineField({
             name: 'longDescription',
             title: 'Descrizione Lunga',
             type: 'array',

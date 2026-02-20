@@ -13,6 +13,7 @@
     "@portabletext/react": "^6.0.2",
     "@sanity/image-url": "^2.0.3",
     "@sanity/vision": "^5.9.0",
+    "dotenv": "^17.3.1",
     "next": "16.1.6",
     "next-sanity": "^12.1.0",
     "react": "19.2.3",
