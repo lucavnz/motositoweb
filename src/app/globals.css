@@ -1847,6 +1847,7 @@ img {
   letter-spacing: 0.15em;
   color: var(--text-dim);
   padding: 24px 24px 16px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .detail-v2-specs-list {
@@ -1858,17 +1859,11 @@ img {
   justify-content: space-between;
   align-items: center;
   padding: 18px 24px;
-  transition: background 0.2s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.detail-v2-spec-row:nth-child(even) {
-  background: rgba(255, 255, 255, 0.015);
-}
-
-
-
-.detail-v2-spec-row:hover {
-  background: rgba(255, 255, 255, 0.03);
+.detail-v2-spec-row:last-child {
+  border-bottom: none;
 }
 
 .detail-v2-spec-label {
@@ -2315,7 +2310,11 @@ img {
 
   .detail-v2-grid {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 14px;
+  }
+
+  .detail-v2-sidebar {
+    gap: 40px;
   }
 
   .detail-v2-model {
@@ -2324,8 +2323,8 @@ img {
 
   .detail-v2-price {
     font-size: 2rem;
-    margin-bottom: 24px;
-    padding-bottom: 20px;
+    margin-bottom: 37px;
+    padding-bottom: 24px;
   }
 
   .gallery-v2-main {
