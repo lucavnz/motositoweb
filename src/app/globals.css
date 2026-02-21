@@ -2289,7 +2289,7 @@ img {
   }
 
   .section {
-    padding: 60px 16px;
+    padding: 60px 24px;
   }
 
   .navbar {
@@ -2297,7 +2297,7 @@ img {
   }
 
   .latest-section {
-    padding: 60px 16px 40px;
+    padding: 60px 24px 40px;
   }
 
   .moto-grid {
@@ -2317,15 +2317,15 @@ img {
   }
 
   .featured-block-text {
-    padding: 40px 16px;
+    padding: 40px 24px;
   }
 
   .featured-blocks-header {
-    padding: 0 16px 50px;
+    padding: 0 24px 50px;
   }
 
   .detail-v2 {
-    padding: 90px 16px 60px;
+    padding: 90px 24px 60px;
   }
 
   .detail-v2-grid {
@@ -2367,6 +2367,27 @@ img {
     grid-template-columns: 1fr;
     gap: 40px;
     padding: 0 24px;
+    text-align: center;
+  }
+
+  .footer-col {
+    align-items: center;
+  }
+
+  .footer-link-list,
+  .footer-contact-info {
+    align-items: center;
+    width: 100%;
+  }
+
+  .contact-item {
+    text-align: center;
+    justify-content: center;
+  }
+
+  .footer-socials {
+    justify-content: center;
+    width: 100%;
   }
 
   .footer-bottom {
@@ -2380,11 +2401,11 @@ img {
   }
 
   .page-header {
-    padding: 100px 16px 40px;
+    padding: 100px 24px 40px;
   }
 
   .brand-header {
-    padding: 100px 16px 10px;
+    padding: 100px 24px 40px;
   }
 
   .brand-header::after {
