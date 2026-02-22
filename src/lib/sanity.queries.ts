@@ -38,6 +38,7 @@ export const brandBySlugQuery = groq`
 
 // ── Motorcycles ─────────────────────────────────────────
 export const newMotorcyclesByBrandQuery = groq`
+  // cache-bust: v2
   *[_type == "motorcycle" && condition == "nuova" && brand->slug.current == $brandSlug] | order(model asc) {
     _id,
     model,
@@ -46,6 +47,31 @@ export const newMotorcyclesByBrandQuery = groq`
     type,
     condition,
     price,
+    cilindrata,
+    shortDescription,
+    images[] {
+      asset { _ref },
+      alt
+    },
+    brand-> {
+      _id,
+      name,
+      slug
+    }
+  }
+`
+
+export const allNewMotorcyclesQuery = groq`
+  // cache-bust: v2
+  *[_type == "motorcycle" && condition == "nuova"] | order(model asc) {
+    _id,
+    model,
+    slug,
+    year,
+    type,
+    condition,
+    price,
+    cilindrata,
     shortDescription,
     images[] {
       asset { _ref },
@@ -60,6 +86,7 @@ export const newMotorcyclesByBrandQuery = groq`
 `
 
 export const allUsedMotorcyclesQuery = groq`
+  // cache-bust: v2
   *[_type == "motorcycle" && condition == "usata"] | order(year desc) {
     _id,
     model,

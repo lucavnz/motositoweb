@@ -15,6 +15,10 @@ interface FilterSidebarProps {
     activePriceMax?: number
     activePriceMin?: number
     onPriceRangeChange?: (min: number, max: number) => void
+    cilindrataMax?: number
+    activeCilindrataMax?: number
+    activeCilindrataMin?: number
+    onCilindrataRangeChange?: (min: number, max: number) => void
     brands?: Array<{ _id: string; name: string; slug: { current: string } }>
     activeBrand?: string
     onBrandChange?: (brand: string) => void
@@ -236,6 +240,10 @@ export function FilterSidebar({
     activePriceMax,
     activePriceMin,
     onPriceRangeChange,
+    cilindrataMax,
+    activeCilindrataMax,
+    activeCilindrataMin,
+    onCilindrataRangeChange,
     brands,
     activeBrand,
     onBrandChange,
@@ -387,6 +395,29 @@ export function FilterSidebar({
                         onChange={onPriceRangeChange}
                         formatLabel={(v) => `€ ${formatPrice(v)}`}
                         step={500}
+                    />
+                </div>
+            )}
+
+            {/* Cilindrata slider */}
+            {cilindrataMax !== undefined && activeCilindrataMax !== undefined && onCilindrataRangeChange && (
+                <div className="filter-group">
+                    <div className="filter-group-header">
+                        <h4 className="filter-group-title">Cilindrata</h4>
+                        {(activeCilindrataMin !== 0 || activeCilindrataMax !== cilindrataMax) && (
+                            <button className="filter-reset" onClick={() => onCilindrataRangeChange(0, cilindrataMax)}>
+                                Reset
+                            </button>
+                        )}
+                    </div>
+                    <DualRangeSlider
+                        min={0}
+                        max={cilindrataMax}
+                        valueMin={activeCilindrataMin || 0}
+                        valueMax={activeCilindrataMax}
+                        onChange={onCilindrataRangeChange}
+                        formatLabel={(v) => `${v} cc`}
+                        step={50}
                     />
                 </div>
             )}

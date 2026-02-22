@@ -170,6 +170,9 @@ img {
 .navbar-right {
   position: relative;
   z-index: 2;
+  display: flex;
+  gap: 16px;
+  align-items: center;
 }
 
 .navbar-usato-btn {
@@ -190,6 +193,8 @@ img {
   background: var(--orange);
   color: var(--bg);
 }
+
+
 
 /* ── Hamburger ── */
 
@@ -266,7 +271,6 @@ img {
 
 .mobile-menu .mobile-menu-usato {
   color: var(--orange);
-  margin-top: 16px;
 }
 
 .mobile-menu .mobile-menu-usato:hover {
@@ -704,6 +708,10 @@ img {
   margin-bottom: 2px;
 }
 
+.contact-hours-card {
+  grid-column: span 2;
+}
+
 .service-card {
   background: rgba(255, 255, 255, 0.03);
   padding: 48px 36px;
@@ -809,6 +817,10 @@ img {
 
   .services-grid {
     grid-template-columns: 1fr;
+  }
+
+  .contact-hours-card {
+    grid-column: span 1;
   }
 
   .service-card {
@@ -1620,7 +1632,7 @@ img {
   aspect-ratio: 16/10;
   overflow: hidden;
   background: var(--bg-card);
-  border-radius: 8px;
+  border-radius: 0;
   margin-bottom: 8px;
 }
 
@@ -1716,7 +1728,7 @@ img {
   width: 100px;
   height: 75px;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 0;
   cursor: pointer;
   border: 2px solid transparent;
   opacity: 0.45;
@@ -2009,7 +2021,7 @@ img {
   margin: 0 auto;
   padding: 0 48px;
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  grid-template-columns: 2fr 1fr 1.5fr;
   gap: 60px;
   position: relative;
   z-index: 2;
@@ -2285,19 +2297,19 @@ img {
 
 @media (max-width: 768px) {
   .hero {
-    padding: 0 24px 60px;
+    padding: 0 16px 60px;
   }
 
   .section {
-    padding: 60px 24px;
+    padding: 60px 16px;
   }
 
   .navbar {
-    padding: 0 24px;
+    padding: 0 16px;
   }
 
   .latest-section {
-    padding: 60px 24px 40px;
+    padding: 60px 16px 40px;
   }
 
   .moto-grid {
@@ -2317,20 +2329,20 @@ img {
   }
 
   .featured-block-text {
-    padding: 40px 24px;
+    padding: 40px 16px;
   }
 
   .featured-blocks-header {
-    padding: 0 24px 50px;
+    padding: 0 16px 50px;
   }
 
   .detail-v2 {
-    padding: 90px 24px 60px;
+    padding: 90px 16px 60px;
   }
 
   .detail-v2-grid {
     grid-template-columns: 1fr;
-    gap: 23px;
+    gap: 12px;
   }
 
   .detail-v2-sidebar {
@@ -2347,9 +2359,18 @@ img {
     padding-bottom: 24px;
   }
 
+  .gallery-v2 {
+    margin-bottom: 35px;
+  }
+
   .gallery-v2-main {
-    border-radius: 6px;
+    margin-bottom: 8px;
+    border-radius: 0;
     aspect-ratio: 4/3;
+  }
+
+  .detail-v2-info {
+    padding-top: 0px;
   }
 
   .gallery-v2-thumb {
@@ -2401,11 +2422,11 @@ img {
   }
 
   .page-header {
-    padding: 100px 24px 40px;
+    padding: 100px 16px 16px;
   }
 
   .brand-header {
-    padding: 100px 24px 40px;
+    padding: 100px 16px 27px;
   }
 
   .brand-header::after {
@@ -2417,7 +2438,7 @@ img {
   }
 
   .filter-mobile-toggle {
-    margin-top: 24px;
+    margin-top: 8px;
     margin-bottom: 9px;
   }
 
@@ -2427,5 +2448,54 @@ img {
   .gallery-v2-thumb {
     width: 60px;
     height: 45px;
+  }
+}
+
+/* ── SEO & ACCESSIBILITY ─────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.seo-content-block {
+  padding: 80px 40px;
+  background: var(--bg-card);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.seo-content-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.seo-content-inner h2 {
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
+.seo-content-inner p {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+.seo-content-inner strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .seo-content-block {
+    padding: 60px 16px;
   }
 }

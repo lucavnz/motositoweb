@@ -6,15 +6,37 @@ import { urlFor } from '@/lib/sanity.image'
 import {
   homepageContentQuery,
   latestMotorcyclesQuery,
+  siteSettingsQuery,
 } from '@/lib/sanity.queries'
 import { MotorcycleCard } from '@/components/MotorcycleCard'
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Avanzi Moto — Concessionario Moto KTM, Husqvarna, Kymco, Voge, Beta, Fantic, Piaggio',
+  title: 'Avanzi Moto | Concessionario Ufficiale KTM, Husqvarna, Voge a Brescia',
   description:
-    'Avanzi Moto: concessionario ufficiale multimarca. Scopri la nostra gamma di moto nuove e usate KTM, Husqvarna, Kymco, Voge, Beta, Fantic, Piaggio.',
+    'Avanzi Moto è il tuo concessionario ufficiale a Bagnolo Mella (Brescia) per moto nuove e usate KTM, Husqvarna, Voge, Kymco, Beta, Fantic e Piaggio. Oltre 70 anni di esperienza, officina specializzata e showroom.',
+  keywords: [
+    'concessionario moto Brescia',
+    'concessionario KTM Brescia',
+    'concessionario Husqvarna Brescia',
+    'concessionario Voge Brescia',
+    'concessionario Kymco Brescia',
+    'moto usate Brescia',
+    'moto nuove Brescia',
+    'vendita moto Brescia',
+    'officina moto Brescia',
+    'Avanzi Moto',
+    'Bagnolo Mella'
+  ],
+  openGraph: {
+    title: 'Avanzi Moto | Concessionario Ufficiale Moto a Brescia',
+    description: 'Concessionario ufficiale KTM, Husqvarna, Voge e Kymco a Bagnolo Mella (BS). Scopri le nostre offerte su moto nuove e usate garantite.',
+    url: 'https://avanzimoto.it',
+    siteName: 'Avanzi Moto',
+    locale: 'it_IT',
+    type: 'website',
+  },
 }
 
 // ── Fallback data for the 3 featured blocks ──
@@ -43,9 +65,10 @@ const FEATURED_BLOCKS = [
 ]
 
 export default async function HomePage() {
-  const [homepage, latestBikes] = await Promise.all([
+  const [homepage, latestBikes, settings] = await Promise.all([
     client.fetch(homepageContentQuery),
     client.fetch(latestMotorcyclesQuery),
+    client.fetch(siteSettingsQuery),
   ])
 
   const heroUrl = homepage?.heroImage
@@ -63,6 +86,57 @@ export default async function HomePage() {
 
   return (
     <>
+      {/* ── SEO JSON-LD ── */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "MotorcycleDealer",
+            "name": settings?.siteName || "Avanzi Moto",
+            "image": heroUrl || "",
+            "@id": "https://avanzimoto.it",
+            "url": "https://avanzimoto.it",
+            "telephone": settings?.phone || "+39 030 620134",
+            "email": settings?.email || "",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": settings?.address || "Viale Europa, 3/A",
+              "addressLocality": "Bagnolo Mella",
+              "postalCode": "25021",
+              "addressRegion": "BS",
+              "addressCountry": "IT"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 45.4309,
+              "longitude": 10.1837
+            },
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                "opens": "08:30",
+                "closes": "12:00"
+              },
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday"],
+                "opens": "14:00",
+                "closes": "19:00"
+              },
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": "Saturday",
+                "opens": "14:00",
+                "closes": "18:00"
+              }
+            ],
+            "brands": ["KTM", "Husqvarna", "Voge", "Kymco", "Beta", "Fantic", "Piaggio"]
+          })
+        }}
+      />
+
       {/* ── HERO ── */}
       <section className="hero">
         <div className="hero-image-wrapper">
@@ -82,7 +156,10 @@ export default async function HomePage() {
 
         <div className="hero-content">
           <span className="hero-tag">BRESCIA, DAL 1950</span>
-          <h1 className="hero-title">AVANZI MOTO</h1>
+          <h1 className="hero-title">
+            AVANZI MOTO
+            <span className="sr-only"> - Concessionario Ufficiale Moto KTM, Husqvarna, Voge a Brescia</span>
+          </h1>
           <p className="hero-subtitle">
             Concessionario ufficiale di moto{' '}
             <strong>KTM</strong>, <strong>HUSQVARNA</strong>,{' '}
@@ -295,6 +372,19 @@ export default async function HomePage() {
           {homepage?.ctaSubtitle ||
             'Vieni a trovarci in concessionario. Prova la tua prossima moto.'}
         </p>
+      </section>
+
+      {/* ── SEO CONTENT BLOCK ── */}
+      <section className="seo-content-block">
+        <div className="seo-content-inner">
+          <h2>Concessionario Moto Avanzi Moto a Brescia: Oltre 70 Anni di Passione</h2>
+          <p>
+            Dal 1950, <strong>Avanzi Moto</strong> è il punto di riferimento a <strong>Bagnolo Mella (Brescia)</strong> e in tutta la Lombardia per gli appassionati delle due ruote. Come <strong>concessionario ufficiale KTM, Husqvarna, Voge, Kymco, Beta, Fantic e Piaggio</strong>, offriamo un vasto catalogo di moto nuove e usate garantite per ogni esigenza: dalla guida sportiva in pista, ai viaggi enduro e adventure, fino agli scooter per la mobilità urbana.
+          </p>
+          <p>
+            Nel nostro showroom troverai non solo i migliori modelli sul mercato, ma anche un'<strong>officina moto specializzata</strong> con ricambi originali, abbigliamento tecnico, accessori e un team di esperti pronto a fornirti <strong>assistenza dedicata</strong> tecnica e commerciale. Prova la tua prossima moto su strada o valuta un usato sicuro e periziato. Visita <strong>Avanzi Moto</strong> per scoprire tutte le ultime novità delle case motociclistiche e vivere l'esperienza d'acquisto migliore d'Italia.
+          </p>
+        </div>
       </section>
     </>
   )

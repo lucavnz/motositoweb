@@ -6,9 +6,11 @@ import { urlFor } from '@/lib/sanity.image'
 import {
     motorcycleBySlugQuery,
     allMotorcycleSlugsQuery,
+    allNewMotorcyclesQuery,
 } from '@/lib/sanity.queries'
 import { ImageGallery } from '@/components/ImageGallery'
 import { PortableText } from '@portabletext/react'
+import { MotorcycleCard } from '@/components/MotorcycleCard'
 
 export const revalidate = 3600
 
@@ -34,21 +36,40 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const brandName = moto.brand?.name || 'Moto'
 
+    const isUsed = moto.condition === 'usata'
+    const conditionText = isUsed ? 'usata garantita' : 'nuova'
+
+    const keywords = [
+        `${brandName} ${moto.model} Brescia`,
+        `concessionario ${brandName} Lombardia`,
+        `prezzo ${brandName} ${moto.model}`,
+        `vendita moto ${brandName}`,
+        `${moto.model} usata Brescia`,
+        `${moto.model} nuova Brescia`,
+        'Avanzi Moto',
+        'Bagnolo Mella'
+    ]
+
+    const priceString = moto.price ? ` - €${moto.price.toLocaleString('it-IT')}` : ' | Prezzo e Promozioni'
+    const titleString = `${brandName} ${moto.model} ${moto.year || ''} a Brescia${priceString} | Avanzi Moto`.replace(/\s+/g, ' ').trim()
+    const descString = moto.shortDescription
+        ? `${moto.shortDescription} Scopri la ${brandName} ${moto.model} ${moto.year || ''} ${conditionText} da Avanzi Moto a Bagnolo Mella (Brescia).`
+        : `Scopri la ${brandName} ${moto.model} ${moto.year || ''} ${conditionText} a Brescia. ${moto.price ? `Prezzo: €${moto.price.toLocaleString('it-IT')}. ` : ''}Il tuo concessionario ufficiale ${brandName} a Bagnolo Mella. Richiedi un preventivo o prenota un test ride.`
+
     return {
-        title: `${brandName} ${moto.model} ${moto.year} — Avanzi Moto`,
-        description:
-            moto.shortDescription ||
-            `${brandName} ${moto.model} ${moto.year} disponibile presso Avanzi Moto, concessionario a Bagnolo Mella (BS).`,
+        title: titleString,
+        description: descString,
+        keywords,
         openGraph: {
-            title: `${brandName} ${moto.model} ${moto.year} | Avanzi Moto`,
-            description:
-                moto.shortDescription ||
-                `Scopri ${brandName} ${moto.model} presso Avanzi Moto, concessionario ufficiale.`,
+            title: titleString,
+            description: descString,
             images: imageUrl ? [{ url: imageUrl, width: 1200, height: 630 }] : [],
             type: 'website',
+            locale: 'it_IT',
+            siteName: 'Avanzi Moto',
         },
         alternates: {
-            canonical: `/moto/${slug}`,
+            canonical: `https://avanzimoto.it/moto/${slug}`,
         },
     }
 }
@@ -62,7 +83,12 @@ const typeLabels: Record<string, string> = {
 
 export default async function MotorcycleDetailPage({ params }: PageProps) {
     const { slug } = await params
-    const moto = await client.fetch(motorcycleBySlugQuery, { slug })
+
+    // Fetch current moto and all new motos in parallel for recommendations
+    const [moto, allNewMotos] = await Promise.all([
+        client.fetch(motorcycleBySlugQuery, { slug }),
+        client.fetch(allNewMotorcyclesQuery)
+    ])
 
     if (!moto) notFound()
 
@@ -99,8 +125,17 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
                 priceCurrency: 'EUR',
                 availability: 'https://schema.org/InStock',
                 seller: {
-                    '@type': 'Organization',
+                    '@type': 'MotorcycleDealer',
                     name: 'Avanzi Moto',
+                    url: 'https://avanzimoto.it',
+                    address: {
+                        "@type": "PostalAddress",
+                        "streetAddress": "Viale Europa, 3/A",
+                        "addressLocality": "Bagnolo Mella",
+                        "postalCode": "25021",
+                        "addressRegion": "BS",
+                        "addressCountry": "IT"
+                    }
                 },
             },
         }),
@@ -134,6 +169,49 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
         ],
     }
 
+    // --- Recommended Logic ---
+    // We only recommend other NEW motorcycles
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const otherMotos = allNewMotos?.filter((m: any) => m._id !== moto._id) || []
+
+    const currentType = moto.type
+    const currentPrice = moto.price || 0
+    // Try to parse number from cilindrata string if any, else 0
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const parseCc = (val: any) => parseInt(String(val).replace(/\D/g, '')) || 0
+    const currentCc = parseCc(moto.cilindrata)
+
+    // Helper to generically sort
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sortByClosest = (list: any[], compareSelector: (m: any) => number, targetVal: number) => {
+        return [...list].sort((a, b) => {
+            // Priority 1: same type
+            const aSameType = a.type === currentType
+            const bSameType = b.type === currentType
+            if (aSameType && !bSameType) return -1
+            if (!aSameType && bSameType) return 1
+
+            // Priority 2: closer value
+            const aVal = compareSelector(a)
+            const bVal = compareSelector(b)
+            return Math.abs(aVal - targetVal) - Math.abs(bVal - targetVal)
+        })
+    }
+
+    // 1. Similar Displacement
+    const similarDisplacement = sortByClosest(otherMotos, (m: any) => parseCc(m.cilindrata), currentCc).slice(0, 4)
+    const similarDisplacementIds = new Set(similarDisplacement.map((m: any) => m._id))
+
+    // 2. Similar Price (excluding already shown)
+    const availableForPrice = otherMotos.filter((m: any) => !similarDisplacementIds.has(m._id))
+    const similarPrice = sortByClosest(availableForPrice, (m: any) => m.price || 0, currentPrice).slice(0, 4)
+    const similarPriceIds = new Set(similarPrice.map((m: any) => m._id))
+
+    // 3. Same Brand (excluding already shown)
+    const availableForBrand = otherMotos.filter((m: any) => !similarDisplacementIds.has(m._id) && !similarPriceIds.has(m._id))
+    const sameBrandMotos = availableForBrand.filter((m: any) => m.brand?.slug?.current === moto.brand?.slug?.current)
+    const sameBrand = sortByClosest(sameBrandMotos, (m: any) => parseCc(m.cilindrata), currentCc).slice(0, 4)
+
     return (
         <>
             <script
@@ -165,7 +243,10 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
                     {/* Left column: info */}
                     <div className="detail-v2-info">
                         <div className="detail-v2-brand-tag">{brandName} {moto.year}</div>
-                        <h1 className="detail-v2-model">{moto.model}</h1>
+                        <h1 className="detail-v2-model">
+                            {moto.model}
+                            <span className="sr-only"> a Brescia - Concessionario {brandName}</span>
+                        </h1>
 
                         {moto.price && (
                             <div className="detail-v2-price">
@@ -177,7 +258,7 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
                         {/* Description */}
                         {(moto.shortDescription || moto.longDescription) && (
                             <div className="detail-v2-description">
-                                <h2>Descrizione</h2>
+                                <h2>DESCRIZIONE DELLA MOTO</h2>
                                 {moto.shortDescription && <p className="detail-v2-short-desc">{moto.shortDescription}</p>}
                                 {moto.longDescription && (
                                     <div className="detail-v2-long-desc">
@@ -243,6 +324,76 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
                     </aside>
                 </div>
             </div>
+
+            {/* --- Recommended Sections --- */}
+            <div className="recommended-sections" style={{ marginTop: '2rem' }}>
+                {similarDisplacement.length > 0 && (
+                    <section className="latest-section" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
+                        <div className="featured-blocks-header">
+                            <span className="featured-blocks-tag">CONSIGLIATE</span>
+                            <h2 className="featured-blocks-title">
+                                CILINDRATA <span>SIMILE</span>
+                            </h2>
+                            <p className="featured-blocks-subtitle">
+                                Moto con categoria e cilindrata simile.
+                            </p>
+                        </div>
+                        <div className="moto-grid">
+                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                            {similarDisplacement.map((m: any) => <MotorcycleCard key={m._id} motorcycle={m} />)}
+                        </div>
+                    </section>
+                )}
+
+                {similarPrice.length > 0 && (
+                    <section className="latest-section" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
+                        <div className="featured-blocks-header">
+                            <span className="featured-blocks-tag">CONSIGLIATE</span>
+                            <h2 className="featured-blocks-title">
+                                PREZZO <span>SIMILE</span>
+                            </h2>
+                            <p className="featured-blocks-subtitle">
+                                Alternative vicine al tuo budget.
+                            </p>
+                        </div>
+                        <div className="moto-grid">
+                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                            {similarPrice.map((m: any) => <MotorcycleCard key={m._id} motorcycle={m} />)}
+                        </div>
+                    </section>
+                )}
+
+                {sameBrand.length > 0 && (
+                    <section className="latest-section" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+                        <div className="featured-blocks-header">
+                            <span className="featured-blocks-tag">CONSIGLIATE</span>
+                            <h2 className="featured-blocks-title">
+                                ALTRE MOTO <span>{brandName.toUpperCase()}</span>
+                            </h2>
+                            <p className="featured-blocks-subtitle">
+                                Scopri tutta la gamma {brandName}.
+                            </p>
+                        </div>
+                        <div className="moto-grid">
+                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                            {sameBrand.map((m: any) => <MotorcycleCard key={m._id} motorcycle={m} />)}
+                        </div>
+                    </section>
+                )}
+            </div>
+
+            {/* ── MOTO SEO CONTENT BLOCK ── */}
+            <section className="seo-content-block">
+                <div className="seo-content-inner">
+                    <h2>Scopri {brandName} {moto.model} a Brescia</h2>
+                    <p>
+                        Vieni a scoprire <strong>{brandName} {moto.model}</strong> nel nostro showroom a <strong>Bagnolo Mella (Brescia)</strong>. Che tu stia cercando una compagna per le tue avventure fuoristrada, una soluzione agile per i tuoi spostamenti urbani o la moto perfetta per i lunghi viaggi, affidati a noi. Come <strong>concessionario ufficiale {brandName}</strong> e centro specializzato in Lombardia, <strong>Avanzi Moto</strong> ti offre le migliori condizioni d'acquisto e servizi post-vendita.
+                    </p>
+                    <p>
+                        Il nostro team di esperti è a tua disposizione per illustrarti i dettagli tecnici e le prestazioni straordinarie della <strong>{moto.model}</strong>. Approfitta delle nostre promozioni esclusive, richiedi una <strong>valutazione senza impegno del tuo usato in permuta</strong> e sfrutta l'esperienza della nostra officina meccanica autorizzata. Prenota oggi stesso il tuo test ride e inizia a vivere l'emozione di guidare una vera {brandName}!
+                    </p>
+                </div>
+            </section>
         </>
     )
 }

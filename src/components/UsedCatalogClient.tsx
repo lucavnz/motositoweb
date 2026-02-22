@@ -12,6 +12,7 @@ interface Motorcycle {
     type: string
     condition: string
     price?: number
+    cilindrata?: number
     kilometers?: number
     shortDescription?: string
     images?: Array<{
@@ -62,23 +63,36 @@ export function UsedCatalogClient({
         return Math.ceil(Math.max(...prices) / 1000) * 1000
     }, [motorcycles])
 
+    const maxCilindrata = useMemo(() => {
+        const cilindrate = motorcycles.filter((m) => m.cilindrata).map((m) => m.cilindrata!)
+        if (cilindrate.length === 0) return 2000
+        return Math.ceil(Math.max(...cilindrate) / 100) * 100
+    }, [motorcycles])
+
     const [activeYearMin, setActiveYearMin] = useState(yearRange[0])
     const [activeYearMax, setActiveYearMax] = useState(yearRange[1])
     const [activePriceMin, setActivePriceMin] = useState(0)
     const [activePriceMax, setActivePriceMax] = useState(maxPrice)
+    const [activeCilindrataMin, setActiveCilindrataMin] = useState(0)
+    const [activeCilindrataMax, setActiveCilindrataMax] = useState(maxCilindrata)
 
     const filtered = motorcycles.filter((m) => {
         const typeMatch = activeType === 'all' || m.type === activeType
         const brandMatch = activeBrand === 'all' || m.brand?.slug.current === activeBrand
         const yearMatch = m.year >= activeYearMin && m.year <= activeYearMax
         const priceMatch = !m.price || (m.price >= activePriceMin && m.price <= activePriceMax)
-        return typeMatch && brandMatch && yearMatch && priceMatch
+
+        const isCilindrataFiltered = activeCilindrataMin > 0 || activeCilindrataMax < maxCilindrata
+        const cilindrataMatch = !isCilindrataFiltered ||
+            (m.cilindrata !== undefined && m.cilindrata !== null && m.cilindrata >= activeCilindrataMin && m.cilindrata <= activeCilindrataMax)
+
+        return typeMatch && brandMatch && yearMatch && priceMatch && cilindrataMatch
     })
 
     // Reset visible count when filters change
     useEffect(() => {
         setVisibleCount(PAGE_SIZE)
-    }, [activeType, activeBrand, activeYearMin, activeYearMax, activePriceMin, activePriceMax])
+    }, [activeType, activeBrand, activeYearMin, activeYearMax, activePriceMin, activePriceMax, activeCilindrataMin, activeCilindrataMax])
 
     const visibleMotos = filtered.slice(0, visibleCount)
     const hasMore = visibleCount < filtered.length
@@ -129,6 +143,13 @@ export function UsedCatalogClient({
                     onPriceRangeChange={(min, max) => {
                         setActivePriceMin(min)
                         setActivePriceMax(max)
+                    }}
+                    cilindrataMax={maxCilindrata}
+                    activeCilindrataMin={activeCilindrataMin}
+                    activeCilindrataMax={activeCilindrataMax}
+                    onCilindrataRangeChange={(min, max) => {
+                        setActiveCilindrataMin(min)
+                        setActiveCilindrataMax(max)
                     }}
                     totalResults={filtered.length}
                 />

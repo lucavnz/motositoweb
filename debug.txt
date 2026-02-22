@@ -1,0 +1,81 @@
+
+
+--- Testing https://vogeitaly.it/sfida-sr1/ ---
+[Gallery] Added src: https://vogeitaly.it/wp-content/uploads/SR1-125_Esterne_Statiche_3-scaled.jpg
+[Skipping] Related product link: https://vogeitaly.it/sfida-sr1 (img: https://vogeitaly.it/wp-content/uploads/Voge-SR1-estudio-1-1024x683.jpg)
+[Skipping] Related product link: https://vogeitaly.it/sfida-sr1-adv (img: https://vogeitaly.it/wp-content/uploads/sr1_adv_corretta.png)
+[Skipping] Related product link: https://vogeitaly.it/sfida-sr2-adv (img: https://vogeitaly.it/wp-content/uploads/DSC1285-1-1024x683.jpg)
+[Skipping] Related product link: https://vogeitaly.it/sfida-sr16 (img: https://vogeitaly.it/wp-content/uploads/sr16_corretta.png)
+[Skipping] Related product link: https://vogeitaly.it/sfida-sr16-200 (img: https://vogeitaly.it/wp-content/uploads/DSC3672-2-300x200.jpg)
+[Skipping] Related product link: https://vogeitaly.it/sfida-sr3-2 (img: https://vogeitaly.it/wp-content/uploads/sr3_corretta-300x200.png)
+[Skipping] Related product link: https://vogeitaly.it/sfida-sr4-max (img: https://vogeitaly.it/wp-content/uploads/sr4_corretta-300x200.png)
+[Gallery] Added src: https://vogeitaly.it/wp-content/uploads/DSC0104-scaled.jpg
+[Gallery] Added src: https://vogeitaly.it/wp-content/uploads/DSC9954-Black-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC7563-scaled.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC7563-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC7564-scaled.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC7564-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC7565-scaled.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC7565-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC7566-scaled.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC7566-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC7567-scaled.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC7567-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC7568-scaled.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC7568-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC7560-scaled.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC7560-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC7562-scaled.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC7562-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC7684-1024x683.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC7684-scaled-500x500.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC7612-683x1024.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC7612-scaled-500x500.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC7744-1024x683.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC7744-scaled-500x500.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC7763-1024x683.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC7763-scaled-500x500.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC7710-1024x683.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC7710-scaled-500x500.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC7724-1024x683.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC7724-scaled-500x500.jpg
+
+Final Unique Images: [
+  'https://vogeitaly.it/wp-content/uploads/SR1-125_Esterne_Statiche_3-scaled.jpg',
+  'https://vogeitaly.it/wp-content/uploads/DSC0104-scaled.jpg',
+  'https://vogeitaly.it/wp-content/uploads/DSC9954-Black-scaled.jpg',
+  'https://vogeitaly.it/wp-content/uploads/DSC7563-scaled.jpg'
+]
+
+
+--- Testing https://vogeitaly.it/sfida-sr4-max/ ---
+
+
+[DUMP] Found MAX_1663. Outer HTML:
+ <div id="rev_slider_47_1" class="rev_slider fullwidthabanner" style="display:none;" data-version="5.4.8.3">
+<ul>	<!-- SLIDE  -->
+<li data-index="rs-58" data-transition="fade" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off" data-easein="default" data-easeout="default" data-masterspeed="default" data-rotate="0" data-saveperformance="off" data-title="Slide" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
+<!-- MAIN IMAGE -->
+<img fetchpriority="high" decoding="async" src="https://vogeitaly.it/wp-content/uploads/MAX_1663-scaled.jpg" alt="" title="MAX_1663" width="2560" height="1707" data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina="">
+<!-- LAYERS -->
+<!-- LAYER NR. 1 -->
+<div class="tp-caption   tp-resizeme" id="slide-58-layer-12" data-x="['left','left','left','left']" data-hoffset="['232','239','93','21']" data-y="['top','top','top','top']" data-voffset="['461','457','202','-6']" data-fontsize="['332','330','250','86']" data-fontweight="['300','400','400','400']" data-letterspacing="['-12','-12','-12','2']" data-width="['1568','none','none','463']" data-height="['288','none','none','286']" data-whitespace="nowrap" data-type="text" data-responsive_offset="on" data-frames="[{&quot;delay&quot;:0,&quot;speed&quot;:300,&quot;frame&quot;:&quot;0&quot;,&quot;from&quot;:&quot;opacity:0;&quot;,&quot;to&quot;:&quot;o:1;&quot;,&quot;ease&quot;:&quot;Power3.easeInOut&quot;},{&quot;delay&quot;:&quot;wait&quot;,&quot;speed&quot;:300,&quot;frame&quot;:&quot;999&quot;,&quot;to&quot;:&quot;opacity:0;&quot;,&quot;ease&quot;:&quot;Power3.easeInOut&quot;}]" data-textalign="['inherit','inherit','inherit','inherit']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 5; min-width: 1568px; max-width: 1568px; max-width: 288px; max-width: 288px; white-space: nowrap; font-size: 332px; line-height: 285px; font-weight: 300; color: #ffffff; letter-spacing: -12px;font-family:Open Sans;"><span class="single-product-slide">SR4 </span></div>
+</li>
+</ul>
+<div class="tp-bannertimer tp-bottom" style="visibility: hidden !important;"></div>	</div>
+[Gallery] Added src: https://vogeitaly.it/wp-content/uploads/MAX_1663-scaled.jpg
+[Skipping] Related product link: https://vogeitaly.it/sfida-sr1 (img: https://vogeitaly.it/wp-content/uploads/Voge-SR1-estudio-1-1024x683.jpg)
+[Skipping] Related product link: https://vogeitaly.it/sfida-sr1-adv (img: https://vogeitaly.it/wp-content/uploads/sr1_adv_corretta.png)
+[Skipping] Related product link: https://vogeitaly.it/sfida-sr2-adv (img: https://vogeitaly.it/wp-content/uploads/DSC1285-1-1024x683.jpg)
+[Skipping] Related product link: https://vogeitaly.it/sfida-sr16 (img: https://vogeitaly.it/wp-content/uploads/sr16_corretta.png)
+[Skipping] Related product link: https://vogeitaly.it/sfida-sr16-200 (img: https://vogeitaly.it/wp-content/uploads/DSC3672-2-300x200.jpg)
+[Skipping] Related product link: https://vogeitaly.it/sfida-sr3-2 (img: https://vogeitaly.it/wp-content/uploads/sr3_corretta-300x200.png)
+[Skipping] Related product link: https://vogeitaly.it/sfida-sr4 (img: https://vogeitaly.it/wp-content/uploads/sr4_corretta-300x200.png)
+[Gallery] Added src: https://vogeitaly.it/wp-content/uploads/DSC9170-1-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC9171-scaled.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC9171-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC9172-scaled.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC9172-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC9162-scaled.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC9162-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC9164-scaled.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC9164-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC9165-scaled.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC9165-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC9166-scaled.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC9166-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC9169-scaled.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC9169-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC9170-scaled.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC9170-scaled.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC9203-1024x683.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC9203-scaled-500x500.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC9199-1024x683.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC9199-scaled-500x500.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC9286-1024x683.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC9286-scaled-500x500.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC9229-1024x683.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC9229-scaled-500x500.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC9266-1024x683.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC9266-scaled-500x500.jpg
+[Gallery] Added parentHref: https://vogeitaly.it/wp-content/uploads/DSC9207-1024x683.jpg from src: https://vogeitaly.it/wp-content/uploads/DSC9207-scaled-500x500.jpg
+
+Final Unique Images: [
+  'https://vogeitaly.it/wp-content/uploads/MAX_1663-scaled.jpg',
+  'https://vogeitaly.it/wp-content/uploads/DSC9170-1-scaled.jpg',
+  'https://vogeitaly.it/wp-content/uploads/DSC9171-scaled.jpg',
+  'https://vogeitaly.it/wp-content/uploads/DSC9172-scaled.jpg'
+]

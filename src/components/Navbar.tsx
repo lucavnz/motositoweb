@@ -61,11 +61,21 @@ export function Navbar({ brands }: { brands: Brand[] }) {
                             </Link>
                         </li>
                     ))}
+                    <li>
+                        <Link
+                            href="/usato"
+                            className={
+                                pathname === `/usato` ? 'active' : ''
+                            }
+                        >
+                            Usato
+                        </Link>
+                    </li>
                 </ul>
 
                 <div className="navbar-right">
-                    <Link href="/usato" className="navbar-usato-btn">
-                        USATO
+                    <Link href="/contattaci" className="navbar-usato-btn">
+                        CONTATTACI
                     </Link>
                 </div>
 
@@ -98,7 +108,14 @@ export function Navbar({ brands }: { brands: Brand[] }) {
                     onClick={() => setMobileOpen(false)}
                     className="mobile-menu-usato"
                 >
-                    Usato
+                    USATO
+                </Link>
+                <Link
+                    href="/contattaci"
+                    onClick={() => setMobileOpen(false)}
+                    className="mobile-menu-usato"
+                >
+                    CONTATTACI
                 </Link>
             </div>
         </>

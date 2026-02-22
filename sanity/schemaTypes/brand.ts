@@ -28,6 +28,13 @@ export default defineType({
             options: {
                 hotspot: true,
             },
+            fields: [
+                {
+                    name: 'alt',
+                    title: 'Testo alternativo',
+                    type: 'string',
+                }
+            ]
         }),
         defineField({
             name: 'order',

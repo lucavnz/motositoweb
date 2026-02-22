@@ -89,39 +89,46 @@ async function fetchHTML(url: string, retries = 3): Promise<string> {
 // ── Scraping ────────────────────────────────────────────
 
 async function discoverModels(): Promise<{ url: string, type: string }[]> {
-    console.log(`📄 Fetching Voge homepage: ${VOGE_BASE_URL}`)
-    const html = await fetchHTML(VOGE_BASE_URL)
-    const $ = cheerio.load(html)
+    console.log(`📄 Fetching ALL Voge models via WordPress API...`)
 
-    // Voge menu structure:
-    // .menu-item -> a (Category, e.g. Brivido) -> .sub-menu -> a (Model link)
+    // Use WordPress REST API to get ALL published pages — no model can be missed
+    const apiUrl = `${VOGE_BASE_URL}/wp-json/wp/v2/pages?per_page=100&_fields=id,link,slug,title`
+    const res = await fetch(apiUrl)
+    const pages: { id: number, link: string, slug: string, title: { rendered: string } }[] = await res.json()
+
+    // Blacklist non-product pages (about, accessori, etc.)
+    const blacklistSlugs = [
+        'accessori', 'care', 'coming-soon', 'social', 'loncin',
+        'informativa-clienti-e-fornitori', 'privacy-policy',
+        'vuoidiventarerivenditore', 'eicma2024', 'sample-page',
+        'concessionari', 'promozioni', 'chi-siamo', 'contatti',
+        'news', 'faq', 'garanzia', 'promo', 'di-nuovo',
+        'areastampa', 'cookie-policy', 'informativa-al-trattamento-dei-dati',
+        'promo-news',
+    ]
 
     const models: { url: string, type: string }[] = []
-    const seen = new Set<string>()
 
-    // Simply look for all menu links
-    $('li.menu-item a').each((_, el) => {
-        const href = $(el).attr('href')
-        if (href && (href.startsWith('http') || href.startsWith('/'))) {
-            const url = href.startsWith('http') ? href : `${VOGE_BASE_URL}${href}`
-            const lowerHref = url.toLowerCase()
+    for (const page of pages) {
+        const slug = page.slug.toLowerCase()
+        const link = page.link
 
-            const isBlacklisted = ['promozioni', 'accessori', 'garanzia', 'di-nuovo', 'concessionari', 'care', 'faq', 'promo', 'privacy', 'informativa', 'chi-siamo', 'contatti', 'news'].some(w => lowerHref.includes(w))
+        // Skip blacklisted slugs
+        if (blacklistSlugs.includes(slug)) continue
+        // Skip the homepage
+        if (slug === '' || link === VOGE_BASE_URL + '/') continue
 
-            // Strictly require one of the family names in the URL
-            if (!isBlacklisted && (lowerHref.includes('valico') || lowerHref.includes('brivido') || lowerHref.includes('trofeo') || lowerHref.includes('sfida'))) {
-                let type = 'strada'
-                if (lowerHref.includes('valico')) type = 'enduro'
-                if (lowerHref.includes('sfida')) type = 'scooter'
+        // Determine type from model family
+        let type = 'strada'
+        if (slug.includes('sfida')) type = 'scooter'
+        else if (slug.includes('xwolf')) type = 'quad'
+        // Brivido, Trofeo, Valico → strada
 
-                if (!seen.has(url)) {
-                    seen.add(url)
-                    models.push({ url, type })
-                }
-            }
-        }
-    })
+        models.push({ url: link, type })
+        console.log(`  Found: ${page.title.rendered} → ${link} [${type}]`)
+    }
 
+    console.log(`Found ${models.length} unique bike models to inspect.`)
     return models
 }
 
@@ -225,24 +232,52 @@ async function scrapeBikeDetails(bikeMeta: { url: string, type: string }): Promi
             }
         }
 
-        // 5a. Hero
-        $('.tp-bgimg').each((_, el) => {
-            const bg = $(el).attr('data-bg') || $(el).css('background-image')
-            if (bg) {
-                const match = bg.match(/url\(['"]?(.*?)['"]?\)/)
-                const cleanUrl = match ? match[1] : bg
-                checkImg(cleanUrl, true)
-            }
+        // ============================================================
+        // WHITELIST-ONLY IMAGE EXTRACTION
+        // We ONLY accept images from two verified sources:
+        //   1) The first Slider Revolution hero (img.rev-slidebg)
+        //   2) The bottom gallery (img.vc_single_image-img whose
+        //      parent <a> href points to a .jpg/.jpeg file)
+        // Everything else (Instagram, team images, related product
+        // thumbnails, logos, PNGs) is simply never picked up.
+        // ============================================================
+
+        // SOURCE 1: Hero image from the first Slider Revolution
+        const heroImg = $('img.rev-slidebg').first()
+        if (heroImg.length) {
+            const heroSrc = heroImg.attr('src')
+            checkImg(heroSrc, true)
+        }
+
+        // SOURCE 2: Gallery images — ONLY img.vc_single_image-img
+        // whose closest <a> parent links directly to a .jpg/.jpeg
+        // (NOT to a page URL like /sfida-sr1-adv — those are
+        // "related products" thumbnails showing OTHER bikes)
+        const countBeforeGallery = validImages.length
+        $('img.vc_single_image-img').each((_, el) => {
+            const parentHref = $(el).closest('a').attr('href') || ''
+
+            // ONLY accept if parent <a> points to an actual image file
+            if (!parentHref.match(/\.(jpg|jpeg)$/i)) return
+
+            // Reject studio/estudio photos
+            if (parentHref.toLowerCase().includes('estudio')) return
+
+            checkImg(parentHref) // use the higher-res parent link
         })
 
-        // 5b. Gallery
-        $('img').each((_, el) => {
-            const src = $(el).attr('src')
-            // Often there's a higher res image in parent link for gallery
-            const parentHref = $(el).closest('a.prettyphoto').attr('href')
-
-            checkImg(parentHref || src)
-        })
+        // SOURCE 3 (FALLBACK): If no vc_single_image gallery images were added,
+        // some pages (Brivido 625R, Trofeo 300AC, X Wolf) use mkdf-ig-lightbox
+        // as their product gallery. Only use this if SOURCE 2 yielded nothing.
+        const galleryAdded = validImages.length - countBeforeGallery
+        if (galleryAdded === 0) {
+            $('a.mkdf-ig-lightbox img, .mkdf-ig-lightbox img').each((_, el) => {
+                const parentHref = $(el).closest('a').attr('href') || ''
+                if (!parentHref.match(/\.(jpg|jpeg)$/i)) return
+                if (parentHref.toLowerCase().includes('estudio')) return
+                checkImg(parentHref)
+            })
+        }
 
         const uniqueImages = [...new Set(validImages)].slice(0, 4)
 

@@ -43,12 +43,11 @@ export async function Footer() {
                 </div>
 
                 <div className="footer-col">
-                    <h4 className="footer-heading">Marchi</h4>
                     <ul className="footer-link-list">
                         {brands?.map((brand: { _id: string; name: string; slug: { current: string } }) => (
                             <li key={brand._id}>
                                 <Link href={`/marchi/${brand.slug.current}`}>
-                                    {brand.name}
+                                    {brand.name.toUpperCase()}
                                 </Link>
                             </li>
                         ))}
@@ -56,23 +55,21 @@ export async function Footer() {
                 </div>
 
                 <div className="footer-col">
-                    <h4 className="footer-heading">Esplora</h4>
                     <ul className="footer-link-list">
                         <li>
-                            <Link href="/">
-                                Home
+                            <Link href="/usato">
+                                USATO
                             </Link>
                         </li>
                         <li>
-                            <Link href="/usato">
-                                Usato
+                            <Link href="/contattaci">
+                                CONTATTACI
                             </Link>
                         </li>
                     </ul>
                 </div>
 
                 <div className="footer-col contact-col">
-                    <h4 className="footer-heading">Contatti</h4>
                     <div className="footer-contact-info">
                         {settings?.address && (
                             <div className="contact-item">

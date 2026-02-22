@@ -1,0 +1,169 @@
+
+
+--- Testing https://vogeitaly.it/sfida-sr1/ ---
+IMG: src=https://vogeitaly.it/wp-content/uploads/2020/03/logo-voge.png
+  parentHref=https://vogeitaly.it/
+  classes=mkdf-normal-logo
+  context: parentClasses=, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/2020/03/logo-voge.png
+  parentHref=https://vogeitaly.it/
+  classes=mkdf-dark-logo
+  context: parentClasses=, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/2020/03/logo-voge.png
+  parentHref=https://vogeitaly.it/
+  classes=mkdf-light-logo
+  context: parentClasses=, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/2020/03/logo-voge.png
+  parentHref=https://vogeitaly.it/
+  classes=mkdf-normal-logo
+  context: parentClasses=, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/2020/03/logo-voge.png
+  parentHref=https://vogeitaly.it/
+  classes=mkdf-dark-logo
+  context: parentClasses=, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/2020/03/logo-voge.png
+  parentHref=https://vogeitaly.it/
+  classes=mkdf-light-logo
+  context: parentClasses=, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/2020/03/logo-voge-mobile.png
+  parentHref=https://vogeitaly.it/
+  classes=undefined
+  context: parentClasses=, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/SR1-125_Esterne_Statiche_3-scaled.jpg
+  classes=rev-slidebg
+  context: parentClasses=, parentId=rev_slider_45_1
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/Voge-SR1-estudio-1-1024x683.jpg
+  parentHref=https://vogeitaly.it/sfida-sr1
+  classes=vc_single_image-img attachment-large
+  context: parentClasses=vc_single_image-wrapper   vc_box_border_grey, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/sr1_adv_corretta.png
+  parentHref=https://vogeitaly.it/sfida-sr1-adv
+  classes=vc_single_image-img attachment-large
+  context: parentClasses=vc_single_image-wrapper   vc_box_border_grey, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC1285-1-1024x683.jpg
+  parentHref=https://vogeitaly.it/sfida-sr2-adv
+  classes=vc_single_image-img attachment-large
+  context: parentClasses=vc_single_image-wrapper   vc_box_border_grey, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/sr16_corretta.png
+  parentHref=https://vogeitaly.it/sfida-sr16
+  classes=vc_single_image-img attachment-large
+  context: parentClasses=vc_single_image-wrapper   vc_box_border_grey, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC3672-2-300x200.jpg
+  parentHref=https://vogeitaly.it/sfida-sr16-200
+  classes=vc_single_image-img attachment-medium
+  context: parentClasses=vc_single_image-wrapper   vc_box_border_grey, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/sr3_corretta-300x200.png
+  parentHref=https://vogeitaly.it/sfida-sr3-2
+  classes=vc_single_image-img attachment-medium
+  context: parentClasses=vc_single_image-wrapper   vc_box_border_grey, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/sr4_corretta-300x200.png
+  parentHref=https://vogeitaly.it/sfida-sr4-max
+  classes=vc_single_image-img attachment-medium
+  context: parentClasses=vc_single_image-wrapper   vc_box_border_grey, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC0104-scaled.jpg
+  classes=attachment-full size-full
+  context: parentClasses=mkdf-team-image, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC9954-Black-scaled.jpg
+  classes=attachment-full size-full
+  context: parentClasses=mkdf-team-image, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC7565.png
+  classes=attachment-full size-full
+  context: parentClasses=mkdf-si-inner, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC7563-scaled.jpg
+  parentHref=https://vogeitaly.it/wp-content/uploads/DSC7563-scaled.jpg
+  classes=attachment-full size-full
+  context: parentClasses=mkdf-ig-lightbox mkdf-block-drag-link, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC7564-scaled.jpg
+  parentHref=https://vogeitaly.it/wp-content/uploads/DSC7564-scaled.jpg
+  classes=attachment-full size-full
+  context: parentClasses=mkdf-ig-lightbox mkdf-block-drag-link, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC7565-scaled.jpg
+  parentHref=https://vogeitaly.it/wp-content/uploads/DSC7565-scaled.jpg
+  classes=attachment-full size-full
+  context: parentClasses=mkdf-ig-lightbox mkdf-block-drag-link, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC7566-scaled.jpg
+  parentHref=https://vogeitaly.it/wp-content/uploads/DSC7566-scaled.jpg
+  classes=attachment-full size-full
+  context: parentClasses=mkdf-ig-lightbox mkdf-block-drag-link, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC7567-scaled.jpg
+  parentHref=https://vogeitaly.it/wp-content/uploads/DSC7567-scaled.jpg
+  classes=attachment-full size-full
+  context: parentClasses=mkdf-ig-lightbox mkdf-block-drag-link, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC7568-scaled.jpg
+  parentHref=https://vogeitaly.it/wp-content/uploads/DSC7568-scaled.jpg
+  classes=attachment-full size-full
+  context: parentClasses=mkdf-ig-lightbox mkdf-block-drag-link, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC7560-scaled.jpg
+  parentHref=https://vogeitaly.it/wp-content/uploads/DSC7560-scaled.jpg
+  classes=attachment-full size-full
+  context: parentClasses=mkdf-ig-lightbox mkdf-block-drag-link, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC7562-scaled.jpg
+  parentHref=https://vogeitaly.it/wp-content/uploads/DSC7562-scaled.jpg
+  classes=attachment-full size-full
+  context: parentClasses=mkdf-ig-lightbox mkdf-block-drag-link, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC7684-scaled-500x500.jpg
+  parentHref=https://vogeitaly.it/wp-content/uploads/DSC7684-1024x683.jpg
+  classes=vc_single_image-img 
+  context: parentClasses=vc_single_image-wrapper   vc_box_border_grey, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC7612-scaled-500x500.jpg
+  parentHref=https://vogeitaly.it/wp-content/uploads/DSC7612-683x1024.jpg
+  classes=vc_single_image-img 
+  context: parentClasses=vc_single_image-wrapper   vc_box_border_grey, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC7744-scaled-500x500.jpg
+  parentHref=https://vogeitaly.it/wp-content/uploads/DSC7744-1024x683.jpg
+  classes=vc_single_image-img 
+  context: parentClasses=vc_single_image-wrapper   vc_box_border_grey, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC7763-scaled-500x500.jpg
+  parentHref=https://vogeitaly.it/wp-content/uploads/DSC7763-1024x683.jpg
+  classes=vc_single_image-img 
+  context: parentClasses=vc_single_image-wrapper   vc_box_border_grey, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC7710-scaled-500x500.jpg
+  parentHref=https://vogeitaly.it/wp-content/uploads/DSC7710-1024x683.jpg
+  classes=vc_single_image-img 
+  context: parentClasses=vc_single_image-wrapper   vc_box_border_grey, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/DSC7724-scaled-500x500.jpg
+  parentHref=https://vogeitaly.it/wp-content/uploads/DSC7724-1024x683.jpg
+  classes=vc_single_image-img 
+  context: parentClasses=vc_single_image-wrapper   vc_box_border_grey, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/2020/04/Copertina-Video.png
+  classes=attachment-full size-full
+  context: parentClasses=mkdf-video-button-image, parentId=
+---
+IMG: src=https://vogeitaly.it/wp-content/uploads/2020/03/logo-voge-300x143.png
+  classes=image wp-image-3816 logo-footer-image attachment-medium size-medium
+  context: parentClasses=widget mkdf-footer-column-1 widget_media_image, parentId=media_image-6
+---
+
+--- HERO BACKGROUNDS ---
