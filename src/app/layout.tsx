@@ -56,6 +56,10 @@ export async function generateMetadata(): Promise<Metadata> {
       index: true,
       follow: true,
     },
+    icons: {
+      icon: '/AvanzimotoLOGO.webp',
+      apple: '/AvanzimotoLOGO.webp',
+    },
   }
 }
 
