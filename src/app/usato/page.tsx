@@ -18,6 +18,9 @@ export const metadata: Metadata = {
         locale: 'it_IT',
         siteName: 'Avanzi Moto',
     },
+    alternates: {
+        canonical: 'https://avanzimoto.it/usato',
+    },
 }
 
 export default async function UsatoPage() {

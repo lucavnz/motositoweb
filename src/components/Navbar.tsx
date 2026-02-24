@@ -31,7 +31,7 @@ export function Navbar({ brands }: { brands: Brand[] }) {
     // On non-homepage pages the navbar is always solid.
     // By triggering a re-render via isMounted, we bypass Next.js 
     // ISR caching edge cases where usePathname might be initially wrong.
-    const isSolid = !isHomepage || scrolled
+    const isSolid = isMounted && (!isHomepage || scrolled)
 
     return (
         <>

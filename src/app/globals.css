@@ -277,6 +277,19 @@ img {
   color: var(--orange-light);
 }
 
+@media (max-width: 1100px) {
+  .navbar-center li a {
+    font-size: 1rem;
+    padding: 10px 10px;
+    letter-spacing: 0.05em;
+  }
+
+  .navbar-usato-btn {
+    font-size: 0.85rem;
+    padding: 6px 16px;
+  }
+}
+
 @media (max-width: 900px) {
   .navbar {
     padding: 0 24px;
@@ -1566,6 +1579,8 @@ img {
 
   .filter-mobile-toggle {
     display: inline-flex;
+    margin-top: 8px;
+    margin-bottom: 9px;
   }
 }
 
@@ -1970,6 +1985,14 @@ img {
   border-color: rgba(255, 255, 255, 0.3);
 }
 
+.detail-v2-cta-btn--whatsapp {
+  background: #25D366;
+}
+
+.detail-v2-cta-btn--whatsapp:hover {
+  background: #1eba59;
+}
+
 
 /* (featured-section styles moved to featured-blocks above) */
 
@@ -2247,6 +2270,20 @@ img {
   line-height: 1.7;
 }
 
+@media (max-width: 900px) {
+  .brand-header {
+    padding: 100px 16px 27px;
+  }
+
+  .brand-header::after {
+    display: none;
+  }
+
+  .brand-header+.section {
+    padding-top: 0;
+  }
+}
+
 /* ── BACK LINK ───────────────────────────────────────── */
 
 .back-link {
@@ -2342,7 +2379,7 @@ img {
 
   .detail-v2-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 18px;
   }
 
   .detail-v2-sidebar {
@@ -2423,23 +2460,6 @@ img {
 
   .page-header {
     padding: 100px 16px 16px;
-  }
-
-  .brand-header {
-    padding: 100px 16px 27px;
-  }
-
-  .brand-header::after {
-    display: none;
-  }
-
-  .brand-header+.section {
-    padding-top: 0;
-  }
-
-  .filter-mobile-toggle {
-    margin-top: 8px;
-    margin-bottom: 9px;
   }
 
 }

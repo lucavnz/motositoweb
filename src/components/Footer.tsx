@@ -1,14 +1,29 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { client } from '@/lib/sanity.client'
-import { siteSettingsQuery, navBrandsQuery } from '@/lib/sanity.queries'
 
-export async function Footer() {
-    const [settings, brands] = await Promise.all([
-        client.fetch(siteSettingsQuery),
-        client.fetch(navBrandsQuery),
-    ])
+interface SiteSettings {
+    siteName?: string
+    description?: string
+    phone?: string
+    email?: string
+    address?: string
+    vatNumber?: string
+    socialLinks?: Array<{ platform: string; url: string }>
+}
 
+interface Brand {
+    _id: string
+    name: string
+    slug: { current: string }
+}
+
+export function Footer({
+    settings,
+    brands,
+}: {
+    settings: SiteSettings | null
+    brands: Brand[] | null
+}) {
     return (
         <footer className="footer">
             <div className="footer-inner">
@@ -28,7 +43,7 @@ export async function Footer() {
                     </p>
                     <div className="footer-socials">
                         {settings?.socialLinks?.map(
-                            (social: { platform: string; url: string }, i: number) => (
+                            (social, i) => (
                                 <a
                                     key={i}
                                     href={social.url}
@@ -44,7 +59,7 @@ export async function Footer() {
 
                 <div className="footer-col">
                     <ul className="footer-link-list">
-                        {brands?.map((brand: { _id: string; name: string; slug: { current: string } }) => (
+                        {brands?.map((brand) => (
                             <li key={brand._id}>
                                 <Link href={`/marchi/${brand.slug.current}`}>
                                     {brand.name.toUpperCase()}

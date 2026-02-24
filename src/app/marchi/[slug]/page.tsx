@@ -37,6 +37,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             locale: 'it_IT',
             siteName: 'Avanzi Moto',
         },
+        alternates: {
+            canonical: `https://avanzimoto.it/marchi/${slug}`,
+        },
     }
 }
 

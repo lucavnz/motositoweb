@@ -17,6 +17,9 @@ export const metadata: Metadata = {
         locale: 'it_IT',
         type: 'website',
     },
+    alternates: {
+        canonical: 'https://avanzimoto.it/contattaci',
+    },
 }
 
 export default async function ContactPage() {

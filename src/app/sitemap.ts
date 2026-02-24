@@ -11,18 +11,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ])
 
     const brandEntries = (brands || []).map(
-        (b: { slug: { current: string } }) => ({
+        (b: { slug: { current: string }; _updatedAt?: string }) => ({
             url: `${BASE_URL}/marchi/${b.slug.current}`,
-            lastModified: new Date(),
+            lastModified: b._updatedAt ? new Date(b._updatedAt) : new Date(),
             changeFrequency: 'weekly' as const,
             priority: 0.8,
         })
     )
 
     const motoEntries = (motorcycles || []).map(
-        (m: { slug: { current: string } }) => ({
+        (m: { slug: { current: string }; _updatedAt?: string }) => ({
             url: `${BASE_URL}/moto/${m.slug.current}`,
-            lastModified: new Date(),
+            lastModified: m._updatedAt ? new Date(m._updatedAt) : new Date(),
             changeFrequency: 'weekly' as const,
             priority: 0.6,
         })
@@ -40,6 +40,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             lastModified: new Date(),
             changeFrequency: 'daily',
             priority: 0.9,
+        },
+        {
+            url: `${BASE_URL}/contattaci`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.5,
         },
         ...brandEntries,
         ...motoEntries,

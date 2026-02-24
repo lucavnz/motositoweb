@@ -124,7 +124,7 @@ export const motorcycleBySlugQuery = groq`
     shortDescription,
     longDescription,
     images[] {
-      asset->,
+      asset-> { _id, url, metadata { dimensions } },
       alt
     },
     brand-> {
@@ -138,13 +138,43 @@ export const motorcycleBySlugQuery = groq`
 
 export const allMotorcycleSlugsQuery = groq`
   *[_type == "motorcycle"] {
-    slug
+    slug,
+    _updatedAt
   }
 `
 
 export const allBrandSlugsQuery = groq`
   *[_type == "brand" && slug.current in ["ktm", "husqvarna", "kymco", "voge"]] {
-    slug
+    slug,
+    _updatedAt
+  }
+`
+
+// ── Recommended motorcycles (efficient, max 12) ────────
+export const recommendedMotorcyclesQuery = groq`
+  *[_type == "motorcycle" && condition == "nuova" && slug.current != $currentSlug]
+  | order(select(
+    type == $currentType => 0,
+    brand->slug.current == $brandSlug => 1,
+    2
+  ) asc, _createdAt desc) [0...12] {
+    _id,
+    model,
+    slug,
+    year,
+    type,
+    condition,
+    price,
+    cilindrata,
+    images[0...1] {
+      asset { _ref },
+      alt
+    },
+    brand-> {
+      _id,
+      name,
+      slug
+    }
   }
 `
 
@@ -187,14 +217,15 @@ export const siteSettingsQuery = groq`
 
 // ── Featured / Latest bikes for homepage ────────────────
 export const latestMotorcyclesQuery = groq`
-  *[_type == "motorcycle" && condition == "nuova"] | order(_createdAt desc) [0...6] {
+  *[_type == "motorcycle" && condition == "nuova" && year == 2026 && brand->slug.current == "ktm"] | order(_createdAt desc) [0...20] {
     _id,
     model,
     slug,
     year,
     type,
     price,
-    images[] {
+    condition,
+    images[0...1] {
       asset { _ref },
       alt
     },

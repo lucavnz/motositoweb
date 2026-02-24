@@ -67,14 +67,17 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const brands = await client.fetch(navBrandsQuery)
+  const [brands, settings] = await Promise.all([
+    client.fetch(navBrandsQuery),
+    client.fetch(siteSettingsQuery),
+  ])
 
   return (
     <html lang="it" className={`${barlowCondensed.variable} ${inter.variable}`} suppressHydrationWarning>
       <body>
         <Navbar brands={brands} />
         <main>{children}</main>
-        <Footer />
+        <Footer settings={settings} brands={brands} />
       </body>
     </html>
   )

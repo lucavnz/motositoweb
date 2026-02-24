@@ -37,6 +37,9 @@ export const metadata: Metadata = {
     locale: 'it_IT',
     type: 'website',
   },
+  alternates: {
+    canonical: 'https://avanzimoto.it',
+  },
 }
 
 // ── Fallback data for the 3 featured blocks ──
@@ -65,11 +68,19 @@ const FEATURED_BLOCKS = [
 ]
 
 export default async function HomePage() {
-  const [homepage, latestBikes, settings] = await Promise.all([
+  const [homepage, latestBikesRaw, settings] = await Promise.all([
     client.fetch(homepageContentQuery),
     client.fetch(latestMotorcyclesQuery),
     client.fetch(siteSettingsQuery),
   ])
+
+  // Shuffle and pick 6 random KTM 2026 bikes (Fisher-Yates)
+  const shuffled = [...(latestBikesRaw || [])]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  const latestBikes = shuffled.slice(0, 6)
 
   const heroUrl = homepage?.heroImage
     ? urlFor(homepage.heroImage).width(1920).height(1080).format('webp').quality(80).url()

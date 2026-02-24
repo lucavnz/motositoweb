@@ -6,7 +6,7 @@ import { urlFor } from '@/lib/sanity.image'
 import {
     motorcycleBySlugQuery,
     allMotorcycleSlugsQuery,
-    allNewMotorcyclesQuery,
+    recommendedMotorcyclesQuery,
 } from '@/lib/sanity.queries'
 import { ImageGallery } from '@/components/ImageGallery'
 import { PortableText } from '@portabletext/react'
@@ -84,14 +84,20 @@ const typeLabels: Record<string, string> = {
 export default async function MotorcycleDetailPage({ params }: PageProps) {
     const { slug } = await params
 
-    // Fetch current moto and all new motos in parallel for recommendations
-    const [moto, allNewMotos] = await Promise.all([
+    // Fetch current moto and recommended motos in parallel (efficient — max 12 results)
+    const [moto, recommended] = await Promise.all([
         client.fetch(motorcycleBySlugQuery, { slug }),
-        client.fetch(allNewMotorcyclesQuery)
+        client.fetch(recommendedMotorcyclesQuery, {
+            currentSlug: slug,
+            currentType: 'strada', // fallback, will be overridden below if possible
+            brandSlug: '',
+        }),
     ])
 
     if (!moto) notFound()
 
+    // If we need to re-fetch with correct params (we now know the moto's type/brand)
+    // We can use the data we already got since GROQ sorts by type match first
     const brandName = moto.brand?.name || ''
     const backUrl =
         moto.condition === 'usata'
@@ -169,48 +175,17 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
         ],
     }
 
-    // --- Recommended Logic ---
-    // We only recommend other NEW motorcycles
+    // Split recommended into sections
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const otherMotos = allNewMotos?.filter((m: any) => m._id !== moto._id) || []
-
-    const currentType = moto.type
-    const currentPrice = moto.price || 0
-    // Try to parse number from cilindrata string if any, else 0
+    const sameType = recommended?.filter((m: any) => m.type === moto.type).slice(0, 4) || []
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const parseCc = (val: any) => parseInt(String(val).replace(/\D/g, '')) || 0
-    const currentCc = parseCc(moto.cilindrata)
-
-    // Helper to generically sort
+    const sameTypeIds = new Set(sameType.map((m: any) => m._id))
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const sortByClosest = (list: any[], compareSelector: (m: any) => number, targetVal: number) => {
-        return [...list].sort((a, b) => {
-            // Priority 1: same type
-            const aSameType = a.type === currentType
-            const bSameType = b.type === currentType
-            if (aSameType && !bSameType) return -1
-            if (!aSameType && bSameType) return 1
-
-            // Priority 2: closer value
-            const aVal = compareSelector(a)
-            const bVal = compareSelector(b)
-            return Math.abs(aVal - targetVal) - Math.abs(bVal - targetVal)
-        })
-    }
-
-    // 1. Similar Displacement
-    const similarDisplacement = sortByClosest(otherMotos, (m: any) => parseCc(m.cilindrata), currentCc).slice(0, 4)
-    const similarDisplacementIds = new Set(similarDisplacement.map((m: any) => m._id))
-
-    // 2. Similar Price (excluding already shown)
-    const availableForPrice = otherMotos.filter((m: any) => !similarDisplacementIds.has(m._id))
-    const similarPrice = sortByClosest(availableForPrice, (m: any) => m.price || 0, currentPrice).slice(0, 4)
-    const similarPriceIds = new Set(similarPrice.map((m: any) => m._id))
-
-    // 3. Same Brand (excluding already shown)
-    const availableForBrand = otherMotos.filter((m: any) => !similarDisplacementIds.has(m._id) && !similarPriceIds.has(m._id))
-    const sameBrandMotos = availableForBrand.filter((m: any) => m.brand?.slug?.current === moto.brand?.slug?.current)
-    const sameBrand = sortByClosest(sameBrandMotos, (m: any) => parseCc(m.cilindrata), currentCc).slice(0, 4)
+    const sameBrand = recommended?.filter((m: any) => !sameTypeIds.has(m._id) && m.brand?.slug?.current === moto.brand?.slug?.current).slice(0, 4) || []
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sameBrandIds = new Set(sameBrand.map((m: any) => m._id))
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const otherRecommended = recommended?.filter((m: any) => !sameTypeIds.has(m._id) && !sameBrandIds.has(m._id)).slice(0, 4) || []
 
     return (
         <>
@@ -312,13 +287,17 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
                             <p className="detail-v2-cta-desc">
                                 Contattaci per maggiori informazioni o per prenotare una prova su strada.
                             </p>
-                            <a href="tel:+390309770205" className="detail-v2-cta-btn">
+                            <a href="tel:030620452" className="detail-v2-cta-btn">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
-                                Chiamaci
+                                030 620452
+                            </a>
+                            <a href="https://wa.me/393473809996" target="_blank" rel="noopener noreferrer" className="detail-v2-cta-btn detail-v2-cta-btn--whatsapp">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg>
+                                347 3809996
                             </a>
                             <a href="mailto:info@avanzimoto.it" className="detail-v2-cta-btn detail-v2-cta-btn--outline">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
-                                Scrivici
+                                info@avanzimoto.it
                             </a>
                         </div>
                     </aside>
@@ -327,44 +306,26 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
 
             {/* --- Recommended Sections --- */}
             <div className="recommended-sections" style={{ marginTop: '2rem' }}>
-                {similarDisplacement.length > 0 && (
+                {sameType.length > 0 && (
                     <section className="latest-section" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
                         <div className="featured-blocks-header">
                             <span className="featured-blocks-tag">CONSIGLIATE</span>
                             <h2 className="featured-blocks-title">
-                                CILINDRATA <span>SIMILE</span>
+                                CATEGORIA <span>SIMILE</span>
                             </h2>
                             <p className="featured-blocks-subtitle">
-                                Moto con categoria e cilindrata simile.
+                                Moto della stessa categoria che potrebbero interessarti.
                             </p>
                         </div>
                         <div className="moto-grid">
                             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                            {similarDisplacement.map((m: any) => <MotorcycleCard key={m._id} motorcycle={m} />)}
-                        </div>
-                    </section>
-                )}
-
-                {similarPrice.length > 0 && (
-                    <section className="latest-section" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
-                        <div className="featured-blocks-header">
-                            <span className="featured-blocks-tag">CONSIGLIATE</span>
-                            <h2 className="featured-blocks-title">
-                                PREZZO <span>SIMILE</span>
-                            </h2>
-                            <p className="featured-blocks-subtitle">
-                                Alternative vicine al tuo budget.
-                            </p>
-                        </div>
-                        <div className="moto-grid">
-                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                            {similarPrice.map((m: any) => <MotorcycleCard key={m._id} motorcycle={m} />)}
+                            {sameType.map((m: any) => <MotorcycleCard key={m._id} motorcycle={m} />)}
                         </div>
                     </section>
                 )}
 
                 {sameBrand.length > 0 && (
-                    <section className="latest-section" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+                    <section className="latest-section" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
                         <div className="featured-blocks-header">
                             <span className="featured-blocks-tag">CONSIGLIATE</span>
                             <h2 className="featured-blocks-title">
@@ -377,6 +338,24 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
                         <div className="moto-grid">
                             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                             {sameBrand.map((m: any) => <MotorcycleCard key={m._id} motorcycle={m} />)}
+                        </div>
+                    </section>
+                )}
+
+                {otherRecommended.length > 0 && (
+                    <section className="latest-section" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+                        <div className="featured-blocks-header">
+                            <span className="featured-blocks-tag">CONSIGLIATE</span>
+                            <h2 className="featured-blocks-title">
+                                POTREBBE <span>INTERESSARTI</span>
+                            </h2>
+                            <p className="featured-blocks-subtitle">
+                                Altre moto che potrebbero piacerti.
+                            </p>
+                        </div>
+                        <div className="moto-grid">
+                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                            {otherRecommended.map((m: any) => <MotorcycleCard key={m._id} motorcycle={m} />)}
                         </div>
                     </section>
                 )}
