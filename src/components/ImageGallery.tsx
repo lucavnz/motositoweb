@@ -61,6 +61,7 @@ export function ImageGallery({ images }: { images: GalleryImage[] }) {
                         sizes="(max-width: 768px) 100vw, 70vw"
                         style={{ objectFit: 'cover' }}
                         priority={activeIndex === 0}
+                        unoptimized
                     />
                 </div>
 
@@ -108,6 +109,7 @@ export function ImageGallery({ images }: { images: GalleryImage[] }) {
                                     sizes="120px"
                                     style={{ objectFit: 'cover' }}
                                     loading="lazy"
+                                    unoptimized
                                 />
                             </button>
                         )

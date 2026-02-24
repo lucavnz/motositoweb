@@ -48,6 +48,7 @@ export function MotorcycleCard({ motorcycle }: MotorcycleCardProps) {
                         sizes="(max-width: 768px) 100vw, 33vw"
                         style={{ objectFit: 'cover' }}
                         loading="lazy"
+                        unoptimized
                     />
                 ) : (
                     <div className="skeleton" style={{ width: '100%', height: '100%' }} />

@@ -159,6 +159,7 @@ export default async function HomePage() {
               sizes="100vw"
               style={{ objectFit: 'cover' }}
               priority
+              unoptimized
             />
           ) : (
             <div className="skeleton" style={{ width: '100%', height: '100%' }} />
@@ -224,6 +225,7 @@ export default async function HomePage() {
                 sizes="(max-width: 768px) 100vw, 60vw"
                 style={{ objectFit: 'cover' }}
                 loading="lazy"
+                unoptimized
               />
             ) : (
               <div className="about-value-card-bg" />
@@ -247,6 +249,7 @@ export default async function HomePage() {
                 sizes="(max-width: 768px) 100vw, 40vw"
                 style={{ objectFit: 'cover' }}
                 loading="lazy"
+                unoptimized
               />
             ) : (
               <div className="about-value-card-bg" />
@@ -354,6 +357,7 @@ export default async function HomePage() {
                 sizes="100vw"
                 style={{ objectFit: 'cover' }}
                 loading="lazy"
+                unoptimized
               />
             ) : (
               <div className="about-value-card-bg" />
