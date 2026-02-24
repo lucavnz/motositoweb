@@ -6,7 +6,8 @@ import { urlFor } from '@/lib/sanity.image'
 import {
     motorcycleBySlugQuery,
     allMotorcycleSlugsQuery,
-    recommendedMotorcyclesQuery,
+    recommendedNewQuery,
+    recommendedUsedQuery,
 } from '@/lib/sanity.queries'
 import { ImageGallery } from '@/components/ImageGallery'
 import { PortableText } from '@portabletext/react'
@@ -91,12 +92,17 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
 
     const brandName = moto.brand?.name || ''
 
-    // Now fetch recommendations with the actual type and brand
-    const recommended = await client.fetch(recommendedMotorcyclesQuery, {
-        currentSlug: slug,
-        currentType: moto.type || 'strada',
-        brandSlug: moto.brand?.slug?.current || '',
-    })
+    // Fetch recommendations: 1 query based on condition (new vs used)
+    const isUsed = moto.condition === 'usata'
+    const recommended = await client.fetch(
+        isUsed ? recommendedUsedQuery : recommendedNewQuery,
+        {
+            currentSlug: slug,
+            currentType: moto.type || 'strada',
+            brandSlug: moto.brand?.slug?.current || '',
+        }
+    )
+
     const backUrl =
         moto.condition === 'usata'
             ? '/usato'
@@ -173,18 +179,6 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
         ],
     }
 
-    // Split recommended into sections
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const sameType = recommended?.filter((m: any) => m.type === moto.type).slice(0, 4) || []
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const sameTypeIds = new Set(sameType.map((m: any) => m._id))
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const sameBrand = recommended?.filter((m: any) => !sameTypeIds.has(m._id) && m.brand?.slug?.current === moto.brand?.slug?.current).slice(0, 4) || []
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const sameBrandIds = new Set(sameBrand.map((m: any) => m._id))
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const otherRecommended = recommended?.filter((m: any) => !sameTypeIds.has(m._id) && !sameBrandIds.has(m._id)).slice(0, 4) || []
-
     return (
         <>
             <script
@@ -250,10 +244,12 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
                                     <span className="detail-v2-spec-label">Anno</span>
                                     <span className="detail-v2-spec-value">{moto.year}</span>
                                 </div>
-                                <div className="detail-v2-spec-row">
-                                    <span className="detail-v2-spec-label">Tipo</span>
-                                    <span className="detail-v2-spec-value">{typeLabels[moto.type] || moto.type}</span>
-                                </div>
+                                {moto.condition !== 'usata' && (
+                                    <div className="detail-v2-spec-row">
+                                        <span className="detail-v2-spec-label">Tipo</span>
+                                        <span className="detail-v2-spec-value">{typeLabels[moto.type] || moto.type}</span>
+                                    </div>
+                                )}
                                 {moto.cilindrata && (
                                     <div className="detail-v2-spec-row">
                                         <span className="detail-v2-spec-label">Cilindrata</span>
@@ -302,45 +298,9 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
                 </div>
             </div>
 
-            {/* --- Recommended Sections --- */}
-            <div className="recommended-sections" style={{ marginTop: '2rem' }}>
-                {sameType.length > 0 && (
-                    <section className="latest-section" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
-                        <div className="featured-blocks-header">
-                            <span className="featured-blocks-tag">CONSIGLIATE</span>
-                            <h2 className="featured-blocks-title">
-                                CATEGORIA <span>SIMILE</span>
-                            </h2>
-                            <p className="featured-blocks-subtitle">
-                                Moto della stessa categoria che potrebbero interessarti.
-                            </p>
-                        </div>
-                        <div className="moto-grid">
-                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                            {sameType.map((m: any) => <MotorcycleCard key={m._id} motorcycle={m} />)}
-                        </div>
-                    </section>
-                )}
-
-                {sameBrand.length > 0 && (
-                    <section className="latest-section" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
-                        <div className="featured-blocks-header">
-                            <span className="featured-blocks-tag">CONSIGLIATE</span>
-                            <h2 className="featured-blocks-title">
-                                ALTRE MOTO <span>{brandName.toUpperCase()}</span>
-                            </h2>
-                            <p className="featured-blocks-subtitle">
-                                Scopri tutta la gamma {brandName}.
-                            </p>
-                        </div>
-                        <div className="moto-grid">
-                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                            {sameBrand.map((m: any) => <MotorcycleCard key={m._id} motorcycle={m} />)}
-                        </div>
-                    </section>
-                )}
-
-                {otherRecommended.length > 0 && (
+            {/* --- Recommended Section --- */}
+            {recommended && recommended.length > 0 && (
+                <div className="recommended-sections" style={{ marginTop: '2rem' }}>
                     <section className="latest-section" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
                         <div className="featured-blocks-header">
                             <span className="featured-blocks-tag">CONSIGLIATE</span>
@@ -353,11 +313,11 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
                         </div>
                         <div className="moto-grid">
                             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                            {otherRecommended.map((m: any) => <MotorcycleCard key={m._id} motorcycle={m} />)}
+                            {recommended.map((m: any) => <MotorcycleCard key={m._id} motorcycle={m} />)}
                         </div>
                     </section>
-                )}
-            </div>
+                </div>
+            )}
 
             {/* ── MOTO SEO CONTENT BLOCK ── */}
             <section className="seo-content-block">

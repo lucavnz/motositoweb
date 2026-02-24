@@ -150,14 +150,36 @@ export const allBrandSlugsQuery = groq`
   }
 `
 
-// ── Recommended motorcycles (efficient, max 12) ────────
-export const recommendedMotorcyclesQuery = groq`
-  *[_type == "motorcycle" && slug.current != $currentSlug]
-  | order(select(
-    type == $currentType => 0,
-    brand->slug.current == $brandSlug => 1,
-    2
-  ) asc, _createdAt desc) [0...12] {
+// ── Recommended: for NEW motos (same brand, prioritize same type) ──
+export const recommendedNewQuery = groq`
+  *[_type == "motorcycle" && slug.current != $currentSlug
+    && brand->slug.current == $brandSlug]
+  | order(select(type == $currentType => 0, 1) asc, _createdAt desc) [0...6] {
+    _id,
+    model,
+    slug,
+    year,
+    type,
+    condition,
+    price,
+    cilindrata,
+    images[0...1] {
+      asset { _ref },
+      alt
+    },
+    brand-> {
+      _id,
+      name,
+      slug
+    }
+  }
+`
+
+// ── Recommended: for USED motos (other used bikes, prioritize same type) ──
+export const recommendedUsedQuery = groq`
+  *[_type == "motorcycle" && slug.current != $currentSlug
+    && condition == "usata"]
+  | order(select(type == $currentType => 0, 1) asc, _createdAt desc) [0...6] {
     _id,
     model,
     slug,
