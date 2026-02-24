@@ -84,21 +84,19 @@ const typeLabels: Record<string, string> = {
 export default async function MotorcycleDetailPage({ params }: PageProps) {
     const { slug } = await params
 
-    // Fetch current moto and recommended motos in parallel (efficient — max 12 results)
-    const [moto, recommended] = await Promise.all([
-        client.fetch(motorcycleBySlugQuery, { slug }),
-        client.fetch(recommendedMotorcyclesQuery, {
-            currentSlug: slug,
-            currentType: 'strada', // fallback, will be overridden below if possible
-            brandSlug: '',
-        }),
-    ])
+    // Fetch moto first, then recommendations with correct params
+    const moto = await client.fetch(motorcycleBySlugQuery, { slug })
 
     if (!moto) notFound()
 
-    // If we need to re-fetch with correct params (we now know the moto's type/brand)
-    // We can use the data we already got since GROQ sorts by type match first
     const brandName = moto.brand?.name || ''
+
+    // Now fetch recommendations with the actual type and brand
+    const recommended = await client.fetch(recommendedMotorcyclesQuery, {
+        currentSlug: slug,
+        currentType: moto.type || 'strada',
+        brandSlug: moto.brand?.slug?.current || '',
+    })
     const backUrl =
         moto.condition === 'usata'
             ? '/usato'

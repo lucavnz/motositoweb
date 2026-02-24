@@ -5,6 +5,7 @@ import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { client } from '@/lib/sanity.client'
 import { navBrandsQuery, siteSettingsQuery } from '@/lib/sanity.queries'
+import { Analytics } from '@vercel/analytics/next'
 
 const barlowCondensed = Barlow_Condensed({
   subsets: ['latin'],
@@ -78,6 +79,7 @@ export default async function RootLayout({
         <Navbar brands={brands} />
         <main>{children}</main>
         <Footer settings={settings} brands={brands} />
+        <Analytics />
       </body>
     </html>
   )

@@ -13,6 +13,7 @@
     "@portabletext/react": "^6.0.2",
     "@sanity/image-url": "^2.0.3",
     "@sanity/vision": "^5.9.0",
+    "@vercel/analytics": "^1.6.1",
     "dotenv": "^17.3.1",
     "jimp": "^1.6.0",
     "next": "16.1.6",

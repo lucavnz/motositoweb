@@ -152,7 +152,7 @@ export const allBrandSlugsQuery = groq`
 
 // ── Recommended motorcycles (efficient, max 12) ────────
 export const recommendedMotorcyclesQuery = groq`
-  *[_type == "motorcycle" && condition == "nuova" && slug.current != $currentSlug]
+  *[_type == "motorcycle" && slug.current != $currentSlug]
   | order(select(
     type == $currentType => 0,
     brand->slug.current == $brandSlug => 1,
