@@ -43,6 +43,7 @@ export function UsedCatalogClient({
 }) {
     const [activeType, setActiveType] = useState('all')
     const [activeBrand, setActiveBrand] = useState('all')
+    const [searchQuery, setSearchQuery] = useState('')
     const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
     const sentinelRef = useRef<HTMLDivElement>(null)
 
@@ -86,13 +87,16 @@ export function UsedCatalogClient({
         const cilindrataMatch = !isCilindrataFiltered ||
             (m.cilindrata !== undefined && m.cilindrata !== null && m.cilindrata >= activeCilindrataMin && m.cilindrata <= activeCilindrataMax)
 
-        return typeMatch && brandMatch && yearMatch && priceMatch && cilindrataMatch
+        const searchMatch = searchQuery === '' ||
+            `${m.brand?.name || ''} ${m.model}`.toLowerCase().includes(searchQuery.toLowerCase())
+
+        return typeMatch && brandMatch && yearMatch && priceMatch && cilindrataMatch && searchMatch
     })
 
     // Reset visible count when filters change
     useEffect(() => {
         setVisibleCount(PAGE_SIZE)
-    }, [activeType, activeBrand, activeYearMin, activeYearMax, activePriceMin, activePriceMax, activeCilindrataMin, activeCilindrataMax])
+    }, [activeType, activeBrand, activeYearMin, activeYearMax, activePriceMin, activePriceMax, activeCilindrataMin, activeCilindrataMax, searchQuery])
 
     const visibleMotos = filtered.slice(0, visibleCount)
     const hasMore = visibleCount < filtered.length
@@ -121,6 +125,16 @@ export function UsedCatalogClient({
 
     return (
         <div className="catalog-layout">
+            {/* Mobile Search - Rendered above the filter toggle on narrow screens */}
+            <div className="catalog-search-mobile">
+                <input
+                    type="text"
+                    className="catalog-search-input"
+                    placeholder="CERCA MODELLO DELLA MOTO..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+            </div>
             <div className="catalog-main">
                 <FilterSidebar
                     showTypeFilter={false}
@@ -153,25 +167,39 @@ export function UsedCatalogClient({
                     }}
                     totalResults={filtered.length}
                 />
-                {filtered.length > 0 ? (
-                    <>
-                        <div className="catalog-grid">
-                            {visibleMotos.map((moto) => (
-                                <MotorcycleCard key={moto._id} motorcycle={moto} />
-                            ))}
-                        </div>
-                        {hasMore && (
-                            <div ref={sentinelRef} className="catalog-sentinel">
-                                <span className="catalog-loading">Caricamento…</span>
-                            </div>
-                        )}
-                    </>
-                ) : (
-                    <div className="empty-state">
-                        <h3>NESSUNA MOTO TROVATA</h3>
-                        <p>Prova a modificare i filtri per trovare la tua moto usata.</p>
+
+                <div className="catalog-right-col">
+                    {/* Desktop Search - Rendered at top of the catalog grid on wide screens */}
+                    <div className="catalog-search-desktop">
+                        <input
+                            type="text"
+                            className="catalog-search-input"
+                            placeholder="CERCA MODELLO DELLA MOTO..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
                     </div>
-                )}
+
+                    {filtered.length > 0 ? (
+                        <>
+                            <div className="catalog-grid">
+                                {visibleMotos.map((moto) => (
+                                    <MotorcycleCard key={moto._id} motorcycle={moto} />
+                                ))}
+                            </div>
+                            {hasMore && (
+                                <div ref={sentinelRef} className="catalog-sentinel">
+                                    <span className="catalog-loading">Caricamento…</span>
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <div className="empty-state">
+                            <h3>NESSUNA MOTO TROVATA</h3>
+                            <p>Prova a modificare i filtri o la ricerca per trovare la tua moto usata.</p>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     )
