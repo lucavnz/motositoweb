@@ -125,16 +125,6 @@ export function UsedCatalogClient({
 
     return (
         <div className="catalog-layout">
-            {/* Mobile Search - Rendered above the filter toggle on narrow screens */}
-            <div className="catalog-search-mobile">
-                <input
-                    type="text"
-                    className="catalog-search-input"
-                    placeholder="CERCA MODELLO DELLA MOTO..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                />
-            </div>
             <div className="catalog-main">
                 <FilterSidebar
                     showTypeFilter={false}
@@ -167,6 +157,16 @@ export function UsedCatalogClient({
                     }}
                     totalResults={filtered.length}
                 />
+
+                <div className="catalog-search-mobile">
+                    <input
+                        type="text"
+                        className="catalog-search-input"
+                        placeholder="CERCA MODELLO DELLA MOTO..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </div>
 
                 <div className="catalog-right-col">
                     {/* Desktop Search - Rendered at top of the catalog grid on wide screens */}
