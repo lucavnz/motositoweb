@@ -1449,7 +1449,7 @@ img {
   display: none;
   align-items: center;
   gap: 8px;
-  padding: 10px 20px;
+  padding: 12px 20px;
   background: rgba(255, 255, 255, 0.04);
   border: none;
   border-left: 3px solid var(--orange);
