@@ -115,42 +115,50 @@ export function BrandCatalogClient({
     return (
         <div className="catalog-layout">
             <div className="catalog-main">
-                <FilterSidebar
-                    types={uniqueTypes}
-                    activeType={activeType}
-                    onTypeChange={setActiveType}
-                    yearRange={yearRange}
-                    activeYearMin={activeYearMin}
-                    activeYearMax={activeYearMax}
-                    onYearRangeChange={(min, max) => {
-                        setActiveYearMin(min)
-                        setActiveYearMax(max)
-                    }}
-                    priceMax={maxPrice}
-                    activePriceMin={activePriceMin}
-                    activePriceMax={activePriceMax}
-                    onPriceRangeChange={(min, max) => {
-                        setActivePriceMin(min)
-                        setActivePriceMax(max)
-                    }}
-                    cilindrataMax={maxCilindrata}
-                    activeCilindrataMin={activeCilindrataMin}
-                    activeCilindrataMax={activeCilindrataMax}
-                    onCilindrataRangeChange={(min, max) => {
-                        setActiveCilindrataMin(min)
-                        setActiveCilindrataMax(max)
-                    }}
-                    totalResults={filtered.length}
-                />
-
-                <div className="catalog-search-mobile">
-                    <input
-                        type="text"
-                        className="catalog-search-input"
-                        placeholder="Cerca modello..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                <div className="mobile-catalog-header">
+                    <FilterSidebar
+                        types={uniqueTypes}
+                        activeType={activeType}
+                        onTypeChange={setActiveType}
+                        yearRange={yearRange}
+                        activeYearMin={activeYearMin}
+                        activeYearMax={activeYearMax}
+                        onYearRangeChange={(min, max) => {
+                            setActiveYearMin(min)
+                            setActiveYearMax(max)
+                        }}
+                        priceMax={maxPrice}
+                        activePriceMin={activePriceMin}
+                        activePriceMax={activePriceMax}
+                        onPriceRangeChange={(min, max) => {
+                            setActivePriceMin(min)
+                            setActivePriceMax(max)
+                        }}
+                        cilindrataMax={maxCilindrata}
+                        activeCilindrataMin={activeCilindrataMin}
+                        activeCilindrataMax={activeCilindrataMax}
+                        onCilindrataRangeChange={(min, max) => {
+                            setActiveCilindrataMin(min)
+                            setActiveCilindrataMax(max)
+                        }}
+                        totalResults={filtered.length}
                     />
+
+                    <div className="catalog-search-mobile">
+                        <div className="search-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                        </div>
+                        <input
+                            type="text"
+                            className="catalog-search-input"
+                            placeholder="CERCA MODELLO..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
                 </div>
 
                 <div className="catalog-right-col">

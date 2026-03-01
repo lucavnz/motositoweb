@@ -2561,3 +2561,92 @@ img {
     display: block;
   }
 }
+
+/* ── MOBILE CATALOG HEADER (FILTERS + SEARCH) ── */
+.mobile-catalog-header {
+  display: contents;
+  /* Desktop: let children participate in the CSS Grid normally */
+}
+
+@media (max-width: 900px) {
+  .mobile-catalog-header {
+    display: flex;
+    align-items: stretch;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0;
+    margin-top: 16px;
+    margin-bottom: 18px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-catalog-header:focus-within {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 2px rgba(255, 107, 0, 0.3);
+    /* Soft orange glow instead of border */
+  }
+
+  .mobile-catalog-header .filter-mobile-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 24px;
+    margin: 0;
+    background: transparent;
+    border: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--white);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .mobile-catalog-header .filter-mobile-toggle:hover,
+  .mobile-catalog-header .filter-mobile-toggle:active {
+    background: rgba(255, 107, 0, 0.1);
+  }
+
+  .mobile-catalog-header .catalog-search-mobile {
+    display: flex;
+    align-items: center;
+    /* keep center but icon might need tweaking */
+    flex-grow: 1;
+    margin: 0;
+    padding-left: 16px;
+  }
+
+  .mobile-catalog-header .catalog-search-mobile .search-icon {
+    display: flex;
+    align-items: center;
+    color: var(--orange);
+    flex-shrink: 0;
+    margin-top: 2px;
+    /* optical adjustment for Barlow Condensed */
+  }
+
+  .mobile-catalog-header .catalog-search-input {
+    width: 100%;
+    padding: 14px 16px 14px 12px;
+    background: transparent;
+    border: none;
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    outline: none;
+  }
+
+  .mobile-catalog-header .catalog-search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.15em;
+  }
+}
