@@ -11,6 +11,9 @@
 
 import { createClient, type SanityClient } from '@sanity/client'
 import * as cheerio from 'cheerio'
+import * as dotenv from 'dotenv'
+
+dotenv.config({ path: '.env.local' })
 
 // ── Config ──────────────────────────────────────────────
 
@@ -486,8 +489,10 @@ async function main() {
 
     // Step 4: Sync
     console.log('🔄 Step 4: Syncing with Sanity...')
-    let created = 0, updated = 0, skipped = 0
+    let created = 0, updated = 0, skipped = 0, deleted = 0
 
+    // 4a: Create & Update
+    console.log('\n  -- Checking for new & updated listings --')
     for (const scraped of scrapedMotos) {
         const brandId = await ensureBrand(scraped.brand, existingBrands)
         const existing = existingByProductId.get(scraped.productId)
@@ -506,6 +511,22 @@ async function main() {
         await sleep(500)
     }
 
+    // 4b: Delete stale listings
+    console.log('\n  -- Checking for removed listings --')
+    const scrapedProductIds = new Set(scrapedMotos.map((m) => m.productId))
+
+    for (const existing of existingMotos) {
+        // Only consider motorcycles that have a motoItProductId
+        if (existing.motoItProductId && !scrapedProductIds.has(existing.motoItProductId)) {
+            console.log(`  🗑️  Deleting: ${existing.brand?.name || 'Unknown'} ${existing.model} (ID: ${existing.motoItProductId})`)
+            if (!DRY_RUN) {
+                await sanityClient.delete(existing._id)
+            }
+            deleted++
+            await sleep(500)
+        }
+    }
+
     // Summary
     console.log()
     console.log('═══════════════════════════════════════════════════════')
@@ -513,7 +534,8 @@ async function main() {
     console.log(`  ➕ Created: ${created}`)
     console.log(`  ✏️  Updated: ${updated}`)
     console.log(`  ⏭️  Skipped: ${skipped}`)
-    console.log(`  ❌ Failed: ${productIds.length - scrapedMotos.length}`)
+    console.log(`  🗑️  Deleted: ${deleted}`)
+    console.log(`  ❌ Failed (scraping errors): ${productIds.length - scrapedMotos.length}`)
     console.log(`  🏷️  Brands: ${existingBrands.length} total`)
     if (DRY_RUN) {
         console.log('  🔍 This was a DRY RUN — no changes were made')

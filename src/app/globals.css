@@ -2516,39 +2516,55 @@ img {
 }
 
 .catalog-search-desktop {
-  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 24px;
+  margin-bottom: 37px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.25s ease;
+}
+
+.catalog-search-desktop:hover,
+.catalog-search-desktop.search-active {
+  background: rgba(255, 255, 255, 0.05);
+  border-left-color: var(--orange);
+}
+
+.catalog-search-desktop .search-icon {
+  display: flex;
+  align-items: center;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  transition: color 0.25s ease;
+}
+
+.catalog-search-desktop:hover .search-icon,
+.catalog-search-desktop.search-active .search-icon {
+  color: var(--orange);
 }
 
 .catalog-search-input {
   width: 100%;
-  padding: 17px 24px;
-  background: rgba(255, 255, 255, 0.05);
+  padding: 16px 0;
+  background: transparent;
   border: none;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0;
   color: var(--white);
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
+  outline: none;
   transition: all 0.2s ease;
 }
 
-.catalog-search-mobile .catalog-search-input {
-  font-size: 1rem;
-  padding: 12px 14px;
-}
-
-.catalog-search-input:focus {
-  outline: none;
-  border-bottom-color: var(--orange);
-  background: rgba(255, 255, 255, 0.08);
-}
-
 .catalog-search-input::placeholder {
-  color: var(--text-muted);
+  color: var(--text-dim);
   text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.15em;
 }
 
 /* ── Responsive ── */
@@ -2558,7 +2574,7 @@ img {
   }
 
   .catalog-search-mobile {
-    display: block;
+    display: flex;
   }
 }
 
@@ -2571,82 +2587,95 @@ img {
 @media (max-width: 900px) {
   .mobile-catalog-header {
     display: flex;
-    align-items: stretch;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 0;
+    flex-direction: column;
+    gap: 0;
     margin-top: 16px;
     margin-bottom: 18px;
-    overflow: hidden;
-    transition: all 0.2s ease;
   }
 
-  .mobile-catalog-header:focus-within {
-    background: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 0 0 2px rgba(255, 107, 0, 0.3);
-    /* Soft orange glow instead of border */
-  }
-
+  /* ── Filter button ── */
   .mobile-catalog-header .filter-mobile-toggle {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 14px 24px;
+    gap: 10px;
+    width: 100%;
+    padding: 15px 20px;
     margin: 0;
-    background: transparent;
+    background: rgba(255, 255, 255, 0.04);
     border: none;
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 3px solid var(--orange);
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
     font-size: 1.05rem;
     text-transform: uppercase;
     letter-spacing: 0.15em;
-    color: var(--white);
+    color: var(--text-muted);
     cursor: pointer;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
+    transition: all 0.25s ease;
   }
 
-  .mobile-catalog-header .filter-mobile-toggle:hover,
+  .mobile-catalog-header .filter-mobile-toggle:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--white);
+  }
+
   .mobile-catalog-header .filter-mobile-toggle:active {
     background: rgba(255, 107, 0, 0.1);
+    color: var(--white);
   }
 
+  .mobile-catalog-header .filter-mobile-toggle svg {
+    color: var(--orange);
+  }
+
+  /* ── Search bar ── */
   .mobile-catalog-header .catalog-search-mobile {
     display: flex;
     align-items: center;
-    /* keep center but icon might need tweaking */
-    flex-grow: 1;
+    gap: 12px;
+    width: 100%;
+    padding: 0 20px;
     margin: 0;
-    padding-left: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border-left: 3px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    transition: all 0.25s ease;
+  }
+
+  .mobile-catalog-header .catalog-search-mobile.search-active {
+    border-left-color: var(--orange);
   }
 
   .mobile-catalog-header .catalog-search-mobile .search-icon {
     display: flex;
     align-items: center;
-    color: var(--orange);
+    color: var(--text-dim);
     flex-shrink: 0;
-    margin-top: 2px;
-    /* optical adjustment for Barlow Condensed */
+    transition: color 0.2s ease;
+  }
+
+  .mobile-catalog-header .catalog-search-mobile.search-active .search-icon {
+    color: var(--orange);
   }
 
   .mobile-catalog-header .catalog-search-input {
     width: 100%;
-    padding: 14px 16px 14px 12px;
+    padding: 15px 0;
     background: transparent;
     border: none;
     color: var(--white);
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
-    font-size: 1.05rem;
-    letter-spacing: 0.15em;
+    font-size: 1rem;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     outline: none;
   }
 
   .mobile-catalog-header .catalog-search-input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text-dim);
     text-transform: uppercase;
-    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
     letter-spacing: 0.15em;
   }
 }

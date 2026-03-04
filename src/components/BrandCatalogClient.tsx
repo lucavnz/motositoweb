@@ -144,7 +144,7 @@ export function BrandCatalogClient({
                         totalResults={filtered.length}
                     />
 
-                    <div className="catalog-search-mobile">
+                    <div className={`catalog-search-mobile${searchQuery ? ' search-active' : ''}`}>
                         <div className="search-icon">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                                 <circle cx="11" cy="11" r="8" />
@@ -155,6 +155,7 @@ export function BrandCatalogClient({
                             type="text"
                             className="catalog-search-input"
                             placeholder="CERCA MODELLO..."
+                            aria-label="Cerca modello"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -162,12 +163,19 @@ export function BrandCatalogClient({
                 </div>
 
                 <div className="catalog-right-col">
-                    {/* Desktop Search - Rendered at top of the catalog grid on wide screens */}
-                    <div className="catalog-search-desktop">
+                    {/* Desktop Search */}
+                    <div className={`catalog-search-desktop${searchQuery ? ' search-active' : ''}`}>
+                        <div className="search-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                        </div>
                         <input
                             type="text"
                             className="catalog-search-input"
-                            placeholder="Cerca modello della moto..."
+                            placeholder="Cerca modello..."
+                            aria-label="Cerca modello"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />

@@ -37,7 +37,7 @@ export function Navbar({ brands }: { brands: Brand[] }) {
         <>
             <nav className={`navbar ${isSolid ? 'navbar--scrolled' : ''} ${mobileOpen ? 'navbar--open' : ''}`}>
 
-                <Link href="/" className="navbar-logo" style={{ display: 'flex', alignItems: 'center' }}>
+                <Link href="/" className="navbar-logo" aria-label="Torna alla Home Avanzi Moto" style={{ display: 'flex', alignItems: 'center' }}>
                     <Image
                         src="/AvanzimotoLOGO.webp"
                         alt="Avanzi Moto Logo"
