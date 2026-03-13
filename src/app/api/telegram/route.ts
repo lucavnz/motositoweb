@@ -103,9 +103,9 @@ Se manca uno o più dati, rispondi SOLO con un messaggio che elenca cosa manca, 
 • [dato mancante 2]
 
 
-Esempio: _KTM 1290 Super Duke R del 2021, 18.000 km_"
+Esempio: KTM 1290 Super Duke R del 2021, 18.000 km_"
 
-NON procedere alla valutazione se mancano dati.
+NON procedere alla valutazione se mancano dei dati.
 
 STEP 2 - IDENTIFICAZIONE MODELLO:
 Se ci sono tutti i dati, cerca il modello esatto. Considera che l'utente potrebbe scrivere in modo impreciso.
