@@ -1,8 +1,25 @@
 #!/bin/bash
 # Setup Telegram Webhook per Avanzi Moto Valutatore Bot
 # Esegui questo script UNA VOLTA dopo il deploy su Vercel
+#
+# Usa la variabile d'ambiente TELEGRAM_BOT_TOKEN dal file .env.local
 
-TELEGRAM_TOKEN="7998240836:AAGDj08ArL8l8yx0xzpOVfzmwKTJ0N9MY2s"
+# Carica il token dal .env.local
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ENV_FILE="$SCRIPT_DIR/../.env.local"
+
+if [ ! -f "$ENV_FILE" ]; then
+  echo "❌ File .env.local non trovato in $ENV_FILE"
+  exit 1
+fi
+
+TELEGRAM_TOKEN=$(grep TELEGRAM_BOT_TOKEN "$ENV_FILE" | cut -d '=' -f2)
+
+if [ -z "$TELEGRAM_TOKEN" ]; then
+  echo "❌ TELEGRAM_BOT_TOKEN non trovato in .env.local"
+  exit 1
+fi
+
 WEBHOOK_URL="https://www.avanzimoto.it/api/telegram"
 
 echo "🔗 Impostazione webhook Telegram..."
@@ -21,4 +38,3 @@ curl -s "https://api.telegram.org/bot${TELEGRAM_TOKEN}/getWebhookInfo" | python3
 echo ""
 
 echo "✅ Fatto! Ora il bot è attivo su Telegram."
-echo "   Cerca @[nome_bot] su Telegram e scrivi /start"
