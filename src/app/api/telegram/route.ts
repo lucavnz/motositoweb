@@ -102,6 +102,7 @@ Se manca uno o più dati, rispondi SOLO con un messaggio che elenca cosa manca, 
 • [dato mancante 1]
 • [dato mancante 2]
 
+
 Esempio: _KTM 1290 Super Duke R del 2021, 18.000 km_"
 
 NON procedere alla valutazione se mancano dati.
