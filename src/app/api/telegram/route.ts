@@ -61,23 +61,22 @@ async function sendChatAction(chatId: number) {
 }
 
 // ─── Gemini AI ───
-async function callGemini(prompt: string, useGrounding: boolean = true): Promise<string> {
+async function callGemini(prompt: string): Promise<string> {
   const apiKey = await getNextApiKey();
   const genAI = new GoogleGenerativeAI(apiKey);
 
-  const tools: any[] = [];
-  if (useGrounding) {
-    tools.push({ googleSearch: {} });
-  }
-
   const model = genAI.getGenerativeModel({
-    model: 'gemini-2.5-flash-preview-05-20',
-    tools,
+    model: 'gemini-3.1-flash-preview',
   });
 
-  const result = await model.generateContent(prompt);
-  const response = result.response;
-  return response.text();
+  try {
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    return response.text();
+  } catch (err: any) {
+    console.error('[Gemini Error]', err?.message || err);
+    throw err;
+  }
 }
 
 // ─── Prompt Templates ───
@@ -266,8 +265,7 @@ Scrivimi marca, modello, anno e km di una moto e ti farò una valutazione di per
       const brand = brandMatch ? brandMatch[1] : '';
 
       const valuation = await callGemini(
-        buildValuationPrompt(brand, selectedModel, year, km, session.originalText || ''),
-        true
+        buildValuationPrompt(brand, selectedModel, year, km, session.originalText || '')
       );
 
       sessions.delete(chatId);
@@ -284,7 +282,7 @@ Scrivimi marca, modello, anno e km di una moto e ti farò una valutazione di per
   await sendChatAction(chatId);
 
   try {
-    const aiResponse = await callGemini(buildIdentificationPrompt(text), true);
+    const aiResponse = await callGemini(buildIdentificationPrompt(text));
 
     // Caso: Modello unico identificato → vai diretto alla valutazione
     if (aiResponse.includes('MODELLO_UNICO:')) {
@@ -310,8 +308,7 @@ Scrivimi marca, modello, anno e km di una moto e ti farò una valutazione di per
       const brand = brandMatch ? brandMatch[1] : '';
 
       const valuation = await callGemini(
-        buildValuationPrompt(brand, modelLine, year, km, text),
-        true
+        buildValuationPrompt(brand, modelLine, year, km, text)
       );
 
       sessions.delete(chatId);
