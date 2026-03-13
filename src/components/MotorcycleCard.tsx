@@ -65,12 +65,13 @@ export function MotorcycleCard({ motorcycle }: MotorcycleCardProps) {
                     </div>
                 )}
                 <div className="moto-card-model">{motorcycle.model}</div>
-                {motorcycle.price && (
-                    <div className="moto-card-price">
-                        <span className="currency">€</span>{' '}
-                        {motorcycle.price.toLocaleString('it-IT')}
-                    </div>
-                )}
+                <div className="moto-card-price">
+                    {motorcycle.price && motorcycle.price >= 100 ? (
+                        <><span className="currency">€</span>{' '}{motorcycle.price.toLocaleString('it-IT')}</>
+                    ) : (
+                        'DA DEFINIRE'
+                    )}
+                </div>
             </div>
         </Link>
     )

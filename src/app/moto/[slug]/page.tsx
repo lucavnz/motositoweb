@@ -215,12 +215,16 @@ export default async function MotorcycleDetailPage({ params }: PageProps) {
                             <span className="sr-only"> a Brescia - Concessionario {brandName}</span>
                         </h1>
 
-                        {moto.price && (
-                            <div className="detail-v2-price">
-                                <span className="detail-v2-price-currency">€</span>
-                                {moto.price.toLocaleString('it-IT')}
-                            </div>
-                        )}
+                        <div className="detail-v2-price">
+                            {moto.price && moto.price >= 100 ? (
+                                <>
+                                    <span className="detail-v2-price-currency">€</span>
+                                    {moto.price.toLocaleString('it-IT')}
+                                </>
+                            ) : (
+                                'DA DEFINIRE'
+                            )}
+                        </div>
 
                         {/* Description */}
                         {(moto.shortDescription || moto.longDescription) && (

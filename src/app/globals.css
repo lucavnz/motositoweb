@@ -1799,8 +1799,6 @@ img {
   align-items: baseline;
   gap: 4px;
   margin-bottom: 35px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .detail-v2-price-currency {
@@ -2215,23 +2213,14 @@ img {
 /* ── BRAND HEADER ────────────────────────────────────── */
 
 .brand-header {
-  padding: 120px 40px 48px;
+  padding: 120px 40px 24px;
   background: var(--bg);
   max-width: 1400px;
   margin-inline: auto;
   position: relative;
 }
 
-.brand-header::after {
-  content: '';
-  display: block;
-  position: absolute;
-  bottom: 0;
-  left: 40px;
-  right: 40px;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.06);
-}
+
 
 .brand-header-label {
   display: inline-block;
@@ -2264,9 +2253,7 @@ img {
     padding: 100px 16px 27px;
   }
 
-  .brand-header::after {
-    display: none;
-  }
+
 
   .brand-header+.section {
     padding-top: 0;
