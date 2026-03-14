@@ -1,9 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 import { getNextApiKey } from '@/lib/apiKeyManager';
+import { generateValuationPDF, ValuationData } from './generatePdf';
 
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN!;
 const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_TOKEN}`;
+
+// Per prevenire retries infiniti da Telegram sui webhook lenti
+const processedUpdates = new Set<number>();
+
+// ─── Utility JSON Parsing ───
+function parseGenerativeJson(jsonStr: string) {
+  let clean = jsonStr.trim();
+  if (clean.startsWith('```')) {
+    clean = clean.replace(/^```[a-zA-Z]*\n?/, '').replace(/\n?```$/, '');
+  }
+  return JSON.parse(clean);
+}
 
 // ─── Sessioni in-memory (per Vercel: reset ad ogni cold start, ok per UX) ───
 interface Session {
@@ -52,19 +65,38 @@ async function sendMessage(
     const data = await res.json();
     if (!data.ok) {
       console.error('[Telegram sendMessage error]', data.description);
-      // Fallback: riprova senza HTML
-      await fetch(`${TELEGRAM_API}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: text.replace(/<[^>]*>/g, ''),
-          ...(options.replyMarkup && { reply_markup: options.replyMarkup }),
-        }),
-      });
     }
   } catch (err) {
     console.error('[Telegram sendMessage exception]', err);
+  }
+}
+
+async function sendDocument(
+  chatId: number,
+  buffer: Buffer,
+  filename: string,
+  caption: string
+) {
+  const formData = new FormData();
+  formData.append('chat_id', chatId.toString());
+  formData.append('caption', caption);
+  formData.append('parse_mode', 'HTML');
+  
+  // Create Blob from Buffer safely
+  const blob = new Blob([new Uint8Array(buffer)], { type: 'application/pdf' });
+  formData.append('document', blob, filename);
+
+  try {
+    const res = await fetch(`${TELEGRAM_API}/sendDocument`, {
+      method: 'POST',
+      body: formData,
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      console.error('[Telegram sendDocument error]', data.description);
+    }
+  } catch (err) {
+    console.error('[Telegram sendDocument exception]', err);
   }
 }
 
@@ -117,44 +149,79 @@ function keepTyping(chatId: number): NodeJS.Timeout {
 // ─── Inline Keyboard Builders ───
 
 function buildModelSelectionKeyboard(models: string[]) {
-  return {
-    inline_keyboard: models.map((model, i) => [
-      { text: `${i + 1}. ${model}`, callback_data: `sel:${i}` },
-    ]),
-  };
-}
+  const buttons = models.map((_, i) => ({
+    text: `${i + 1}`,
+    callback_data: `sel:${i}`,
+  }));
 
-function buildPostValuationKeyboard() {
+  // Divide in righe da 4 bottoni l'una per non sforare
+  const rows = [];
+  for (let i = 0; i < buttons.length; i += 4) {
+    rows.push(buttons.slice(i, i + 4));
+  }
+
   return {
-    inline_keyboard: [
-      [
-        { text: '🔄 Nuova valutazione', callback_data: 'action:new' },
-        { text: '📞 Contattaci', url: 'https://wa.me/393400000000' }, // Aggiorna con numero reale
-      ],
-      [
-        { text: '🌐 Vai al sito', url: 'https://www.avanzimoto.it' },
-      ],
-    ],
+    inline_keyboard: rows,
   };
 }
 
 function buildStartKeyboard() {
   return {
     inline_keyboard: [
-      [{ text: '📝 Inizia una valutazione', callback_data: 'action:new' }],
       [{ text: 'ℹ️ Come funziona', callback_data: 'action:help' }],
     ],
   };
 }
 
 // ─── Gemini AI ───
-async function callGemini(prompt: string): Promise<string> {
+async function callGemini(prompt: string, expectJson = false): Promise<string> {
   const apiKey = await getNextApiKey();
   const genAI = new GoogleGenerativeAI(apiKey);
 
-  const model = genAI.getGenerativeModel({
-    model: 'gemini-2.0-flash',
-  });
+  const modelOptions: any = {
+    model: 'gemini-3.1-flash-lite-preview',
+  };
+
+  if (expectJson) {
+       modelOptions.generationConfig = {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: SchemaType.OBJECT,
+        properties: {
+          moto: { type: SchemaType.STRING },
+          anno: { type: SchemaType.STRING },
+          km: { type: SchemaType.STRING },
+          mercato_usato: {
+            type: SchemaType.OBJECT,
+            properties: {
+              min: { type: SchemaType.NUMBER },
+              max: { type: SchemaType.NUMBER }
+            }
+          },
+          permuta_consigliata: {
+             type: SchemaType.OBJECT,
+             properties: {
+               min: { type: SchemaType.NUMBER },
+               max: { type: SchemaType.NUMBER }
+             }
+          },
+          analisi_dettagliata: {
+            type: SchemaType.OBJECT,
+            properties: {
+              rivendibilita: { type: SchemaType.STRING },
+              pro_mercato: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
+              contro_mercato: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
+              svalutazione_annua_stimata: { type: SchemaType.STRING },
+              note_operatore: { type: SchemaType.STRING },
+            }
+          }
+        },
+        required: ["moto", "anno", "km", "mercato_usato", "permuta_consigliata", "analisi_dettagliata"]
+      }
+    };
+  }
+
+  const model = genAI.getGenerativeModel(modelOptions);
 
   try {
     const result = await model.generateContent(prompt);
@@ -224,42 +291,14 @@ Devi valutare questa moto per una permuta:
 - Chilometri: ${km}
 - Descrizione originale dell'utente: "${originalText}"
 
-USA LA RICERCA GOOGLE per trovare:
-1. Il prezzo medio di vendita dell'usato per questo modello con anno e km simili (cerca su siti come moto.it, subito.it, autoscout24.it)
-2. Il prezzo di listino del modello nuovo equivalente 2026 (o dell'ultimo anno disponibile)
+SEI IL MASSIMO ESPERTO ITALIANO NELLA VALUTAZIONE DELLE MOTO. Conosci perfettamente le dinamiche di mercato, la svalutazione annua media, l'impatto dei chilometri e l'ipervalutazione di alcuni modelli particolari.
+USA LA RICERCA GOOGLE per trovare il prezzo medio VERO di vendita dell'usato per questo specifico modello, anno e chilometraggio.
 
-Poi calcola il PREZZO DI RITIRO IN PERMUTA, che è tipicamente il 60-75% del valore di vendita dell'usato (il concessionario deve avere margine).
+Poi calcola il PREZZO DI RITIRO IN PERMUTA. Sii intelligente e analitico: il prezzo di ritiro deve riflettere un calcolo chirurgico dei costi di ripristino, del tempo di fermo in concessionaria e del margine di guadagno necessario. Generalmente tra il 60% e il 75% del prezzo di vendita al pubblico, ma decidi tu il ricarico esatto in base alla rivendibilità del modello.
 
-Rispondi in questo formato ESATTO (usa TAG HTML per formattare, NON usare Markdown):
+Devi generare un'analisi ESTREMAMENTE DETTAGLIATA per professionisti del settore. Specifica la rivendibilità esatta in giorni, i veri punti di forza e soprattutto le criticità tipiche del modello (es. "tagliando desmo da fare", "usura trasmissione", "motore super richiesto ma ciclistica economica").
 
-🏍️ <b>VALUTAZIONE PERMUTA</b>
-
-<b>Moto:</b> [Marchio Modello Completo]
-<b>Anno:</b> [anno]
-<b>Km:</b> [km]
-
-━━━━━━━━━━━━━━━━━━
-
-💰 <b>VALORE USATO MERCATO</b>
-Prezzo medio vendita: <b>€[prezzo_min] - €[prezzo_max]</b>
-
-🔄 <b>RITIRO IN PERMUTA</b>
-Valore consigliato: <b>€[prezzo_min_permuta] - €[prezzo_max_permuta]</b>
-
-🆕 <b>MODELLO NUOVO 2026</b>
-[Nome modello nuovo equivalente]: <b>€[prezzo_listino_nuovo]</b>
-
-━━━━━━━━━━━━━━━━━━
-
-📊 <b>FATTORI CONSIDERATI</b>
-▫️ Km: [commento breve]
-▫️ Anzianità: [commento breve]
-▫️ Mercato: [commento breve]
-▫️ Stato: [commento breve]
-
-⚠️ <i>Valutazione indicativa basata sui prezzi di mercato attuali. Il valore finale dipende dalle condizioni reali della moto.</i>
-
-IMPORTANTE: Usa SOLO tag HTML (<b>, <i>, <code>) per la formattazione. NON usare asterischi, underscore o altra formattazione Markdown.`;
+Rispondi compilando IL JSON richiesto. Assicurati che non ci siano blocchi markdown.`;
 }
 
 // ─── Estrai anno e km dal testo ───
@@ -297,29 +336,38 @@ async function performValuation(
     const brandMatch = selectedModel.match(/^(\w+)/);
     const brand = brandMatch ? brandMatch[1] : '';
 
-    const valuation = await callGemini(
-      buildValuationPrompt(brand, selectedModel, year, km, originalText)
+    const jsonStr = await callGemini(
+      buildValuationPrompt(brand, selectedModel, year, km, originalText),
+      true // Expect JSON
     );
+
+    const valData = parseGenerativeJson(jsonStr) as ValuationData;
+    const pdfBuffer = await generateValuationPDF(valData);
+    const fileName = `Valutazione_${selectedModel.replace(/\s+/g, '_')}_AvanziMoto.pdf`;
 
     clearInterval(typingInterval);
 
-    await sendMessage(chatId, valuation, {
-      replyMarkup: buildPostValuationKeyboard(),
-    });
+    await sendDocument(
+      chatId, 
+      pdfBuffer, 
+      fileName, 
+      `<b>${valData.moto.toUpperCase()} DEL ${valData.anno} CON ${valData.km} KM</b>
+
+🔄 A QUANTO RITIRARLO:
+€${valData.permuta_consigliata.min.toLocaleString('it-IT')} - €${valData.permuta_consigliata.max.toLocaleString('it-IT')}
+
+💰 <b>A QUANTO POSSO VENDERLO:</b>
+€${valData.mercato_usato.min.toLocaleString('it-IT')} - €${valData.mercato_usato.max.toLocaleString('it-IT')}
+
+<i>I dettagli operativi, pro e contro sono nel PDF allegato.</i>`
+    );
   } catch (error: unknown) {
     clearInterval(typingInterval);
     const message = error instanceof Error ? error.message : String(error);
     console.error('Valuation error:', message);
     await sendMessage(
       chatId,
-      '❌ <b>Errore durante la valutazione.</b>\n\nRiprova tra qualche secondo!',
-      {
-        replyMarkup: {
-          inline_keyboard: [
-            [{ text: '🔄 Riprova', callback_data: 'action:new' }],
-          ],
-        },
-      }
+      '❌ <b>Errore durante la valutazione.</b>\n\nRiprova tra qualche secondo!'
     );
   }
 }
@@ -330,32 +378,29 @@ async function handleMessage(chatId: number, text: string) {
 
   const lowerText = text.trim().toLowerCase();
 
-  // ── Comando /start ──
+    // ── Comando /start ──
   if (lowerText === '/start') {
     await sendMessage(
       chatId,
-      `🏍️ <b>Valutatore Moto — Avanzi Moto</b>
+      `🏍️ <b>Benvenuto nel Valutatore Moto Avanzi!</b>
 
-Assistente rapido per valutazioni permuta.
+Sono il tuo assistente per valutare le moto in permuta.
 
-━━━━━━━━━━━━━━━━━━
+📝 <b>Come funziona:</b>
+Scrivimi le info della moto e ti darò una valutazione!
 
-📝 <b>Come funziona</b>
-Scrivi le info della moto e ricevi subito una valutazione di permuta basata sul mercato attuale.
+Devo sapere:
+• <b>Marchio</b> (KTM, Yamaha, Honda...)
+• <b>Modello</b> (Super Duke, MT-07...)
+• <b>Anno</b>
+• <b>Chilometri</b>
 
-<b>Servono 4 dati:</b>
-▫️ Marchio
-▫️ Modello
-▫️ Anno
-▫️ Chilometri
+✏️ <b>Esempio:</b>
+<i>KTM 1290 Super Duke R del 2021, 18.000 km</i>
+<i>Yamaha MT-07 2019 25000km</i>
+<i>Honda CBR 600 RR anno 2018, 32.000 chilometri</i>
 
-━━━━━━━━━━━━━━━━━━
-
-✏️ <b>Esempio</b>
-<code>KTM 1290 Super Duke R 2021 18000km</code>
-<code>Yamaha MT-07 2019 25000km</code>
-<code>Honda CBR 600 RR 2018 32000km</code>`,
-      { replyMarkup: buildStartKeyboard() }
+Scrivi pure in modo naturale, ci penso io! 💪`,
     );
     return;
   }
@@ -366,12 +411,12 @@ Scrivi le info della moto e ricevi subito una valutazione di permuta basata sul 
       chatId,
       `ℹ️ <b>Guida rapida</b>
 
-Scrivi <b>marca, modello, anno e km</b> di una moto e ricevi una valutazione di permuta.
+Scrivimi marca, modello, anno e km di una moto e ti farò una valutazione di permuta.
 
 <b>Comandi:</b>
-/start — Messaggio di benvenuto
-/help — Questa guida
-/reset — Azzera conversazione`,
+/start - Messaggio di benvenuto
+/help - Questa guida
+/reset - Azzera conversazione`,
     );
     return;
   }
@@ -381,7 +426,7 @@ Scrivi <b>marca, modello, anno e km</b> di una moto e ricevi una valutazione di 
     sessions.delete(chatId);
     await sendMessage(
       chatId,
-      '🔄 <b>Conversazione azzerata.</b>\n\nScrivi i dati di una moto per una nuova valutazione!',
+      '🔄 Conversazione azzerata. Scrivi i dati di una nuova moto!',
     );
     return;
   }
@@ -450,9 +495,11 @@ Scrivi <b>marca, modello, anno e km</b> di una moto e ricevi una valutazione di 
           lastActivity: Date.now(),
         });
 
+        const listText = modelLines.map((m, i) => `<b>${i + 1}.</b> ${m}`).join('\n');
+
         await sendMessage(
           chatId,
-          `🔍 <b>Più versioni trovate</b>\n\nSeleziona il modello corretto:`,
+          `🔍 <b>Più versioni trovate</b>\n\n${listText}\n\n👇 Seleziona il numero corrispondente qui sotto:`,
           { replyMarkup: buildModelSelectionKeyboard(modelLines) }
         );
         return;
@@ -525,17 +572,7 @@ async function handleCallbackQuery(
     return;
   }
 
-  // ── Azioni post-valutazione ──
-  if (data === 'action:new') {
-    sessions.delete(chatId);
-    await answerCallbackQuery(callbackQueryId, '🔄 Pronto per una nuova valutazione!');
-    await sendMessage(
-      chatId,
-      `🏍️ <b>Nuova valutazione</b>\n\nScrivi <b>marca, modello, anno e km</b> della moto da valutare.\n\n<i>Esempio:</i> <code>KTM 1290 Super Duke R 2021 18000km</code>`,
-    );
-    return;
-  }
-
+  // ── Azioni ──
   if (data === 'action:help') {
     await answerCallbackQuery(callbackQueryId);
     await sendMessage(
@@ -571,6 +608,20 @@ Se ci sono più versioni del modello, ti chiederò di scegliere con un bottone.
 export async function POST(req: NextRequest) {
   try {
     const update = await req.json();
+
+    // Deduplicate webhook retries
+    const updateId = update.update_id;
+    if (updateId) {
+      if (processedUpdates.has(updateId)) {
+        return NextResponse.json({ ok: true });
+      }
+      processedUpdates.add(updateId);
+      if (processedUpdates.size > 1000) {
+        // Rimuovi il più vecchio per non esaurire la memoria
+        const first = processedUpdates.keys().next().value;
+        if (first !== undefined) processedUpdates.delete(first);
+      }
+    }
 
     // ── Gestisci callback query (bottoni inline) ──
     if (update?.callback_query) {
