@@ -3,6 +3,9 @@ import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 import { getNextApiKey } from '@/lib/apiKeyManager';
 import { generateValuationPDF, ValuationData } from './generatePdf';
 
+export const dynamic = 'force-dynamic';
+export const maxDuration = 60; // 60 secondi limite per Vercel Hobby
+
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN!;
 const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_TOKEN}`;
 
