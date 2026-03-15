@@ -39,16 +39,16 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
   // ── Header Banner (Moderno) ──
   doc.setFillColor(...primaryColor);
   doc.rect(0, 0, pageWidth, 40, 'F');
-
+  
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(28);
   doc.setFont('helvetica', 'bold');
   doc.text('AVANZI MOTO', 14, 24);
-
+  
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(200, 210, 220);
-  doc.text('Scheda Valutazione Usato', 14, 32);
+  doc.text('Scheda Valutazione Usato - Uso Interno Professionale', 14, 32);
 
   doc.text(`Data: ${new Date().toLocaleDateString('it-IT')}`, pageWidth - 40, 32);
 
@@ -59,13 +59,13 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
   doc.setFont('helvetica', 'bold');
   const motoUpper = data.moto.toUpperCase();
   doc.text(motoUpper, 14, cursorY);
-
+  
   cursorY += 8;
   doc.setFontSize(12);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(80, 90, 100);
   doc.text(`Anno Registrazione: ${data.anno}  |  Chilometraggio: ${data.km} km`, 14, cursorY);
-
+  
   cursorY += 10;
   doc.setDrawColor(200, 210, 220);
   doc.setLineWidth(0.5);
@@ -83,9 +83,9 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
       ['Valore Permuta (Ritiro Consigliato)', formatEuro(data.permuta_consigliata.min), formatEuro(data.permuta_consigliata.max)],
     ],
     theme: 'plain', // Più elegante, no griglia pesante
-    headStyles: {
-      fillColor: lightBg,
-      textColor: primaryColor,
+    headStyles: { 
+      fillColor: lightBg, 
+      textColor: primaryColor, 
       fontStyle: 'bold',
       fontSize: 10
     },
@@ -118,7 +118,7 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
 
   cursorY = finalY + 15;
   const lineSpacing = 7;
-
+  
   doc.setFontSize(11);
   doc.setTextColor(40, 50, 60);
 
@@ -133,22 +133,23 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
   doc.setFont('helvetica', 'bold');
   doc.text('Svalutazione annua:', 14, cursorY);
   doc.setFont('helvetica', 'normal');
-  doc.text(data.analisi_dettagliata.svalutazione_annua_stimata, 58, cursorY);
+  doc.text(data.analisi_dettagliata.svalutazione_annua_stimata, 50, cursorY);
   cursorY += lineSpacing + 6;
 
   // ── Pro & Contro (Cards arrotondate moderne) ──
   const cardWidth = 85;
   const cardHeight = 60;
-
+  
   // PRO Card
+  doc.setDrawColor(200, 230, 200); // Bordo verde tenue
   doc.setFillColor(242, 252, 242); // Sfondo verde leggerissimo
-  doc.roundedRect(14, cursorY, cardWidth, cardHeight, 3, 3, 'F');
-
+  doc.roundedRect(14, cursorY, cardWidth, cardHeight, 3, 3, 'FD');
+  
   doc.setTextColor(30, 100, 50); // Verde scuro testo
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10);
   doc.text('PUNTI DI FORZA MERCATO', 18, cursorY + 8);
-
+  
   doc.setTextColor(60, 70, 80);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
@@ -160,14 +161,15 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
   });
 
   // CONTRO Card
+  doc.setDrawColor(240, 200, 200); // Bordo rosso tenue
   doc.setFillColor(255, 245, 245); // Sfondo rosso leggerissimo
-  doc.roundedRect(110, cursorY, cardWidth, cardHeight, 3, 3, 'F');
-
+  doc.roundedRect(110, cursorY, cardWidth, cardHeight, 3, 3, 'FD');
+  
   doc.setTextColor(180, 40, 40); // Rosso scuro testo
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10);
   doc.text('RISCHI / PUNTI DEBOLI', 114, cursorY + 8);
-
+  
   doc.setTextColor(60, 70, 80);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
@@ -181,14 +183,15 @@ export async function generateValuationPDF(data: ValuationData): Promise<Buffer>
   cursorY += cardHeight + 12;
 
   // Note per il venditore (Box finale evidenziato)
-  doc.setFillColor(246, 248, 250); // Sfondo grigio minimale
-  doc.roundedRect(14, cursorY, pageWidth - 28, 30, 3, 3, 'F');
+  doc.setDrawColor(220, 230, 240);
+  doc.setFillColor(248, 250, 252); // Sfondo grigio/azzurro chiarissimo
+  doc.roundedRect(14, cursorY, pageWidth - 28, 30, 2, 2, 'FD');
 
   doc.setTextColor(...primaryColor);
   doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
   doc.text('NOTE OPERATIVE PER ACCETTAZIONE:', 18, cursorY + 8);
-
+  
   doc.setTextColor(60, 70, 80);
   doc.setFontSize(10);
   doc.setFont('helvetica', 'italic');

@@ -1,0 +1,27 @@
+
+> sitomoto@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.17:3000
+- Environments: .env.local
+
+✓ Starting...
+✓ Ready in 664ms
+[API Key Manager] Using key #2, use 4/5
+[API Key Manager] Using key #3, use 0/5
+[API Key Manager] Using key #3, use 1/5
+[Telegram sendMessage error] Bad Request: chat not found
+[API Key Manager] Using key #3, use 2/5
+[Telegram sendDocument error] Bad Request: chat not found
+ POST /api/telegram 200 in 3.6s (compile: 4ms, render: 3.6s)
+ POST /api/telegram 200 in 60s (compile: 212ms, render: 60s)
+[API Key Manager] Using key #3, use 3/5
+[API Key Manager] Using key #3, use 4/5
+ POST /api/telegram 200 in 3.4s (compile: 105ms, render: 3.3s)
+ POST /api/telegram 200 in 59ms (compile: 1478µs, render: 57ms)
+[API Key Manager] Using key #1, use 0/5
+[API Key Manager] Using key #1, use 1/5
+ POST /api/telegram 200 in 3.8s (compile: 3ms, render: 3.8s)
+Valuation error: Expected ',' or '}' after property value in JSON at position 65560 (line 6 column 65476)
